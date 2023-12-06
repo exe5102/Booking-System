@@ -49,7 +49,7 @@ def BuildDB():  # 建立訂位資料庫
 def Search(uphone):  # 查詢訂位內容
     try:
         conn = sqlite3.connect("booking.db")
-        cursor = conn.execute("select * from Booking where Phone=?")
+        cursor = conn.execute("select * from Booking where Phone=?", (uphone,))
         data = cursor.fetchall()
         if len(data) > 0:
             for record in data:
