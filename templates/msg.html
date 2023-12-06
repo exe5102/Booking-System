@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>{% block title %}{% endblock  %}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename= 'css/main.css') }}" />
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1><a href="{{ url_for('index') }}">線上訂位系統</a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="{{ url_for('index') }}">首頁</a></li>
+							<li>
+								<a href="#" class="icon solid fa-angle-down"></a>
+								<ul>
+									<li><a href="{{ url_for('index') }}#booking">立即訂位</a></li>
+									<li><a href="{{ url_for('search') }}">查詢訂位</a></li>
+								</ul>
+						</ul>
+					</nav>
+				</header>
+
+			<!-- Main -->
+				<section id="main" class="container">
+					<header>
+						<h2>{% block table %}{% endblock  %}</h2>
+						<h1>訂位系統<h1>
+                            <h2 class = "emp">{{msg}}</h2>
+                            <ul class="actions special">
+                                <li><a href="{{ url_for('index') }}" class="button primary">回首頁</a></li>
+                            </ul>
+					{% block Box %}{% endblock %}
+
+			<!-- Footer -->
+
+		<!-- Scripts -->
+		<script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.dropotron.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+
+	</body>
+</html>

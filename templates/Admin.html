@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW">
+	<head>
+		<title>{% block title %}{% endblock  %}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename= 'css/main.css') }}" />
+	</head>
+	<body class="landing is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header" class="alt">
+					<h1><a href="{{ url_for('Administration') }}">線上訂位系統</a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="{{ url_for('Administration') }}">管理端首頁</a></li>
+							<li>
+								<a href="#" class="icon solid fa-angle-down"></a>
+								<ul>
+									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂位資料</a></li>
+									<li><a href="{{ url_for('Adminsearch') }}">查詢指定客戶訂位</a></li>
+									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂位</a></li>
+								</ul>
+							</li>
+							<li><a href="{{ url_for('Adminlogout') }}" class="button">Logouts</a></li>
+						</ul>
+					</nav>
+				</header>
+
+			<!-- Banner -->
+				<section id="banner">
+					<h2>-訂位管理系統-</h2>
+					<ul class="actions special">
+						<li><a href="{{ url_for('AdminAlldata') }}" class="button">查看所有訂位資料</a></li>
+						<li><a href="{{ url_for('Adminsearch') }}" class="button">查詢指定客戶訂位</a></li>
+						<li><a href="{{ url_for('Admindelete') }}"class="button">取消指定客戶訂位</a></li>
+					</ul>
+				</section>
+
+				<section id="main" class="container">
+
+					<section class="box special">
+						<span class="image featured"><img src="static\css\images\homepage.jpg" alt="" /></span>
+					</section>
+
+
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+						<li><a href="#" class="icon brands fa-google-plus"><span class="label">Google+</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
+			<script src="{{ url_for('static', filename= 'js/jquery.dropotron.min.js') }}"></script>
+			<script src="{{ url_for('static', filename= 'js/jquery.scrollex.min.js') }}"></script>
+			<script src="{{ url_for('static', filename= 'js/browser.min.js') }}"></script>
+			<script src="{{ url_for('static', filename= 'js/breakpoints.min.js') }}"></script>
+			<script src="{{ url_for('static', filename= 'js/util.js') }}"></script>
+			<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+
+	</body>
+</html>
