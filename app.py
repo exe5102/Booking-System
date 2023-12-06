@@ -5,7 +5,7 @@ from Clientlib import (
 from Adminlib import (
     AdminCheck,
     AdminDelete,
-    AdminSearch,
+    Search,
     BuildDB,
     DateControl,
     SearchAll,
@@ -114,7 +114,7 @@ def Adminsearch():
         if request.method == "POST":
             Sphone = request.form["Sphone"]
             return render_template("AdminSearch.html",
-                                   DBfatch=AdminSearch(Sphone))
+                                   DBfatch=Search(Sphone))
         return render_template("AdminSearch.html")
     return render_template("msg.html", msg="請從主頁登入")
 

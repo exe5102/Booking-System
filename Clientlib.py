@@ -41,12 +41,13 @@ def ClientEdit(uid, uphone, unumber, sday, stime):  # 修改訂位內容
             for record in data:
                 print(f"日期:{record[3]}，時段:{record[4]}")
         conn.execute(
-            f"update Booking set Day='{sday}', Time='{stime}' \
-                where Name='{uid}'and Phone='{uphone}'and Number='{unumber}'"
+            "update Booking set Day=? and Time=?\
+                where Name=? and Phone=? and Number=?",
+            (sday, stime, uid, uphone, unumber)
         )
         cursor = conn.execute(
-            f"select * from Booking where Name='{uid}' and Phone='{uphone}'and\
-                Number='{unumber}'"
+            "select * from Booking where Name=? and Phone=? and Number=?",
+            (uid, uphone, unumber)
         )
         data = cursor.fetchall()
         print("修改成功")
@@ -63,7 +64,7 @@ def ClientEdit(uid, uphone, unumber, sday, stime):  # 修改訂位內容
 def ClientSearch(uphone):  # 查詢訂位內容
     try:
         conn = sqlite3.connect("booking.db")
-        cursor = conn.execute(f"select * from Booking where Phone='{uphone}'")
+        cursor = conn.execute("select * from Booking where Phone=?", uphone)
         data = cursor.fetchall()
         print("\n已訂位時段：")
         if len(data) > 0:
