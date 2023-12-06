@@ -43,10 +43,11 @@ def index():
             or stime == "請選擇時段"
         ):
             return redirect(url_for("failed"))
-        # print(uid)
         else:
-            ClientBK(uid, uphone, unumber, sday, stime)
-            return redirect(url_for("Success"))
+            if ClientBK(uid, uphone, unumber, sday, stime):
+                return redirect(url_for("Success"))
+            else:
+                return redirect(url_for("failed"))
 
     return render_template(
         "index.html", today=DateControl()[0], min=DateControl()[1]
