@@ -20,18 +20,9 @@
 								<ul>
 									<li><a href="#booking">立即訂位</a></li>
 									<li><a href="{{ url_for('search') }}">查詢訂位</a></li>
-									<!-- <li>
-										<a href="#">Submenu</a>
-										<ul>
-											<li><a href="#">Option One</a></li>
-											<li><a href="#">Option Two</a></li>
-											<li><a href="#">Option Three</a></li>
-											<li><a href="#">Option Four</a></li>
-										</ul>
-									</li> -->
 								</ul>
 							</li>
-							<li><a href="{{ url_for("Adminlogin") }}" class="button">管理者登入</a></li>
+							<li><a href='{{ url_for("Adminlogin") }}' class="button">管理者登入</a></li>
 						</ul>
 					</nav>
 				</header>
@@ -65,12 +56,9 @@
                         <h2>選擇人數日期進行訂位</h2>
                         <br>
                         <div class="row gtr-50 gtr-uniform">
-                            <!-- <div class="col-6 col-12-mobilep">
-                                <input type="text" name="name" id="name" value="" placeholder="Name" />
-                            </div> -->
 						<form action="/" method="post">
                             <div class="col-4 col-12-mobilep">
-                                <select name="unumber">
+                                <select name="headcount">
                                     <option>請選擇人數</option>
                                     <option value="1">1位</option>
                                     <option value="2">2位</option>
@@ -80,32 +68,17 @@
                                     <option value="6">6位</option>
                                 </select>
                             </div>
-							<div class="col-4 col-12-mobilep">
-                                <select name="time">
-                                    <option>請選擇時段</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:30">12:30</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="17:00">17:00</option>
-                                    <option value="18:30">18:30</option>
-                                    <option value="20:00">20:00</option>
-                                </select>
-                            </div>
                             <div class="col-4 col-12-mobilep">
-                                <input type="text" name="uid" id="uid" value="" placeholder="姓名" />
+                                <input type="text" name="uname" id="uname" value="" placeholder="姓名" />
                             </div>
                             <div class="col-4 col-12-mobilep">
                                 <input type="text" name="uphone" id="uphone" value="" placeholder="電話" />
                             </div>
 							<br>
                             <div class="col-6 col-12-mobilep">
-                                <input type="date" name="bookdate" id="bookdate" value="" placeholder="{{today}}" min="{{min}}" max="{{max}}">
+                                <input type="date" name="bookdate" id="bookdate" value="{{min}}" placeholder="{{today}}" min="{{min}}">
                             </div>
-							<!-- <div class="col-4 col-12-mobilep">
-                                <input type="text" name="bookdate" id="bookdate" value="" placeholder="日期" />
-                            </div> -->
 							<br>
-
                                 <div class="col-12">
 									<ul class="actions special">
 										<input type="submit" value="送出">

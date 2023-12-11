@@ -1,15 +1,3 @@
-from Clientlib import (
-    ClientBK,
-    ClientSearch,
-)
-from Adminlib import (
-    AdminCheck,
-    AdminDelete,
-    Search,
-    BuildDB,
-    DateControl,
-    SearchAll,
-)
 from flask import (
     Flask,
     request,
@@ -18,7 +6,16 @@ from flask import (
     session,
     render_template)
 
-BuildDB()
+from lib import (
+    DBAll,
+    DBcreate,
+    DBnew,
+    DBsearch,
+    DeleteData,
+    check,
+    DateControl)
+
+DBcreate()
 
 app = Flask(__name__)
 # app.config["ENV"] = "development"
@@ -30,37 +27,29 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 @app.route("/", methods=["GET", "POST"])  # 客戶訂位系統
 def index():
     if request.method == "POST":
-        uid = request.form["uid"]
+        uname = request.form["uname"]
         uphone = request.form["uphone"]
-        sday = request.form["bookdate"]
-        unumber = request.form["unumber"]
-        stime = request.form["time"]
-        if (
-            uid == ""
-            or uphone == ""
-            or sday == ""
-            or unumber == "請選擇人數"
-            or stime == "請選擇時段"
-        ):
+        Day = request.form["bookdate"]
+        headcount = request.form["headcount"]
+        if (uname == "" or uphone == "" or Day == "" or headcount == ""):
+            print("1")
             return redirect(url_for("failed"))
         else:
-            if ClientBK(uid, uphone, unumber, sday, stime):
+            if DBnew(uname, uphone, Day, headcount):
                 return redirect(url_for("Success"))
             else:
+                print("2")
                 return redirect(url_for("failed"))
-
-    return render_template(
-        "index.html", today=DateControl()[0], min=DateControl()[1]
-    )
+    return render_template("index.html", min=DateControl()[0])
 
 
 @app.route("/adminlogin", methods=["GET", "POST"])  # 管理端登入
 def Adminlogin():
     if request.method == "POST":
-        account = request.form["account"]
-        password = request.form["password"]
-        if AdminCheck(account, password) is True:
-            session["loginAdminId"] = account
+        act = request.form["account"]
+        pw = request.form["password"]
+        if check(act, pw) is True:
+            session["loginAdminId"] = act
             return redirect(url_for("Administration"))
         return render_template("msg.html", msg="帳號密碼錯誤")
     return render_template("login.html")
@@ -79,8 +68,8 @@ def Success():
 @app.route("/search", methods=["GET", "POST"])  # 客戶查詢訂單
 def search():
     if request.method == "POST":
-        Sphone = request.form["Sphone"]
-        return render_template("search.html", DBfatch=ClientSearch(Sphone))
+        uphone = request.form["Sphone"]
+        return render_template("search.html", DBfatch=DBsearch(uphone))
     return render_template("search.html")
 
 
@@ -102,8 +91,8 @@ def Admindelete():
     if "loginAdminId" in session:
         if request.method == "POST":
             uphone = request.form["Sphone"]
-            Data = ClientSearch(uphone)
-            AdminDelete(uphone)
+            Data = DBsearch(uphone)
+            DeleteData(uphone)
             return render_template("ResultDelete.html", DBfatch=Data)
         return render_template("AdminDelete.html")
     return render_template("msg.html", msg="請從主頁登入")
@@ -113,9 +102,9 @@ def Admindelete():
 def Adminsearch():
     if "loginAdminId" in session:
         if request.method == "POST":
-            Sphone = request.form["Sphone"]
+            uphone = request.form["Sphone"]
             return render_template("AdminSearch.html",
-                                   DBfatch=Search(Sphone))
+                                   DBfatch=DBsearch(uphone))
         return render_template("AdminSearch.html")
     return render_template("msg.html", msg="請從主頁登入")
 
@@ -123,5 +112,5 @@ def Adminsearch():
 @app.route("/adminalldata")  # 管理端列出所有資料
 def AdminAlldata():
     if "loginAdminId" in session:
-        return render_template("AdminAllBooking.html", DBfatch=SearchAll())
+        return render_template("AdminAllBooking.html", DBfatch=DBAll())
     return render_template("msg.html", msg="請從主頁登入")

@@ -49,17 +49,15 @@
                                                         <th><h4>電話</h4></th>
                                                         <th><h4>人數</h4></th>
                                                         <th><h4>日期</h4></th>
-                                                        <th><h4>時段</h4></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {% for Data in DBfatch %}
                                                     <tr>
-                                                        <td>{{ Data[0] }}</td>
                                                         <td>{{ Data[1] }}</td>
                                                         <td>{{ Data[2] }}</td>
+														<td>{{ Data[4] }}</td>
                                                         <td>{{ Data[3] }}</td>
-                                                        <td>{{ Data[4] }}</td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>
