@@ -6,7 +6,16 @@ DB_PATH = "booking.db"
 Pass_Data = "pass.json"
 
 
-def DateControl() -> str:
+def DateControl() -> tuple:
+    """
+        時間讀取
+
+        將時區轉換為東8區
+        新增可預約日期起點
+
+        timestr 可預約日期格式轉換為字串
+        nowtm 現在日期格式轉換為字串
+    """
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
     minday = dt2.replace(day=dt2.day + 7)
@@ -15,7 +24,7 @@ def DateControl() -> str:
     return timestr, nowtm
 
 
-def check(act: str, pw: str) -> bool:  # 完成
+def check(act: str, pw: str) -> bool:
     """json.load() 讀取 JSON 檔案，判斷密碼是否正確"""
     try:
         with open(Pass_Data, "r", encoding="UTF-8") as D:
@@ -29,16 +38,23 @@ def check(act: str, pw: str) -> bool:  # 完成
     except BaseException:
         print("發生預期外的錯誤")
     for ch in UserData:
-        if (act, pw) == (ch["帳號"], ch["密碼"]):
-            return True
+        return True if (act, pw) == (ch["帳號"], ch["密碼"]) else False
 
 
-def DBcreate() -> None:  # 完成
-    """建立資料表"""
+def DBcreate() -> None:
+    """建立資料表
+
+        iid 自動累加 整數 主索引
+        Name 文字 不可為空
+        Day 文字 不可為空
+        Phone 文字 不可為空 唯一性
+        Headcount 整數 不可為空
+
+    """
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute(  # 建立表 Booking iid
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
+        cursor.execute(
             """create table if not exists Booking(
                 iid INTEGER PRIMARY KEY autoincrement,
                 Name TEXT NOT NULL,
@@ -54,11 +70,11 @@ def DBcreate() -> None:  # 完成
         print("=>資料庫已建立")
 
 
-def DBAll() -> list:
+def DBAll() -> tuple:
     """抓取資料庫所有資料"""
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
         cursor.execute("SELECT * FROM Booking")
         data = cursor.fetchall()
         conn.close()
@@ -70,8 +86,8 @@ def DBAll() -> list:
 def DBnew(name: str, day: str, phone: str, hct: int) -> bool:
     """使用者在資料庫中新增資料"""
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
             """
                 INSERT INTO Booking (Name, Day, Phone, Headcount)
@@ -88,13 +104,13 @@ def DBnew(name: str, day: str, phone: str, hct: int) -> bool:
         return False
 
 
-def DBedit(mname: str, Day: str, uphone: str, hct: int) -> list:
+def DBedit(mname: str, Day: str, uphone: str, hct: int) -> tuple:
     """修改資料庫指定資料"""
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
-            "UPDATE Booking SET Day=?, mname=?, headcount=? WHERE mphone=?;",
+            "UPDATE Booking SET Day=?, mname=?, Headcount=? WHERE Phone=?;",
             (Day, mname, hct, uphone),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
@@ -105,26 +121,28 @@ def DBedit(mname: str, Day: str, uphone: str, hct: int) -> list:
         print(f"執行 SELECT 操作時發生錯誤：{error}")
 
 
-def DBsearch(uphone: str) -> list:
+def DBsearch(uphone: tuple) -> tuple:
     """查詢資料庫指定資料，以電話搜尋"""
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Booking WHERE mphone=? ", (uphone,))
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
+        cursor.execute("SELECT * FROM Booking WHERE Phone=?", (uphone,))
         DBdata = cursor.fetchall()  # 抓取所有資料
         if len(DBdata) > 0:  # 判斷有無資料
             for record in DBdata:
-                return (record[1], record[2], record[3], record[4])
+                return record
+        else:
+            print("查無資料")
         conn.close()
     except sqlite3.Error as error:
         print(f"執行 SELECT 操作時發生錯誤：{error}")
 
 
-def DBTableDelete() -> None:  # 完成
+def DBTableDelete() -> None:
     """刪除資料表所有資料"""
     try:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
         cursor.execute("DELETE FROM  Booking")
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
@@ -133,10 +151,12 @@ def DBTableDelete() -> None:  # 完成
         print(f"執行 DELETE 操作時發生錯誤：{error}")
 
 
-def DeleteData(uphone: str):  # 取消訂位
+def DeleteData(uphone: str) -> None:
+    """刪除資料庫中的指定資料"""
     try:
-        conn = sqlite3.connect("booking.db")
-        conn.execute("delete from Booking where Phone=?", (uphone,))
+        conn = sqlite3.connect(DB_PATH)  # 連接資料庫
+        cursor = conn.cursor()  # 建立cursor物件
+        cursor.execute("delete from Booking where Phone=?", (uphone,))
         conn.commit()
         conn.close()
     except Exception as e:
