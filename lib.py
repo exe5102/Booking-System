@@ -38,7 +38,7 @@ def DBcreate() -> None:  # 完成
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
-        cursor.execute(  # 建立表 Booking
+        cursor.execute(  # 建立表 Booking iid
             """create table if not exists Booking(
                 iid INTEGER PRIMARY KEY autoincrement,
                 Name TEXT NOT NULL,
