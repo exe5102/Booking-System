@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>訂位已取消</title>
+		<title>訂房已取消</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ url_for('static', filename= 'css/main.css') }}" />		<!-- 改過了 -->
@@ -16,16 +16,16 @@
 
 			<!-- Header -->
 				<header id="header">
-					<h1><a href="{{ url_for('index') }}">線上訂位系統</a></h1>
+					<h1><a href="{{ url_for('index') }}">線上訂房系統</a></h1>
 					<nav id="nav">
 						<ul>
 							<li><a href="{{ url_for('Administration') }}">回管理端首頁</a></li>
 							<li>
 								<a href="#" class="icon solid fa-angle-down"></a>
 								<ul>
-									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂位資料</a></li>
-									<li><a href="{{ url_for('Adminsearch') }}">查詢指定客戶訂位</a></li>
-									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂位</a></li>
+									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂房資料</a></li>
+									<li><a href="{{ url_for('Adminsearch') }}">查詢指定客戶訂房</a></li>
+									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂房</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -41,7 +41,7 @@
 							<div class="col-12">
 								<!-- Table -->
 									<section class="box">
-										<h3>已刪除以下訂位資料</h3>
+										<h3>已刪除以下訂房資料</h3>
 										<div class="table-wrapper">
 											<table>
 												<thead>

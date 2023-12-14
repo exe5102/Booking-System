@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>訂位取消系統</title>
+		<title>訂房取消系統</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ url_for('static', filename= 'css/main.css') }}" />
@@ -16,16 +16,16 @@
 
 			<!-- Header -->
 				<header id="header">
-					<h1><a href="{{ url_for('Administration') }}">線上訂位系統</a></h1>
+					<h1><a href="{{ url_for('Administration') }}">線上訂房系統</a></h1>
 					<nav id="nav">
 						<ul>
 							<li><a href="{{ url_for('Administration') }}">回管理端首頁</a></li>
 							<li>
 								<a href="#" class="icon solid fa-angle-down"></a>
 								<ul>
-									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂位資料</a></li>
-									<li><a href="{{ url_for('Adminsearch') }}">查詢指定客戶訂位</a></li>
-									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂位</a></li>
+									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂房資料</a></li>
+									<li><a href="{{ url_for('Adminsearch') }}">查詢指定客戶訂房</a></li>
+									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂房</a></li>
 								</ul>
 
 						</ul>
@@ -35,8 +35,8 @@
 			<!-- Main -->
 				<section id="main" class="container">
 					<header>
-						<h2>訂位取消</h2>
-						<p>請在下方輸入訂位的電話號碼</p>
+						<h2>訂房取消</h2>
+						<p>請在下方輸入訂房的電話號碼</p>
 					</header>
 					<div class="row">
 						<div class="col-12">
