@@ -90,6 +90,10 @@ def search():
             return render_template("search.html", DBfatch=DBsearch(uphone))
     return render_template("search.html")
 
+@app.route("/room")  # 客戶查詢資料
+def room():
+    return render_template("room.html")
+
 
 @app.route("/adminhomepage")  # 管理端主頁
 def Administration():
