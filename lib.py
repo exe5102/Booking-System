@@ -4,17 +4,18 @@ from datetime import datetime, timezone, timedelta
 
 DB_PATH = "booking.db"
 Pass_Data = "pass.json"
+room = {"one": 0, "two": 0, "four": 0}
 
 
 def DateControl() -> tuple:
     """
-        時間讀取
+    時間讀取
 
-        將時區轉換為東8區
-        新增可預約日期起點
+    將時區轉換為東8區
+    新增可預約日期起點
 
-        timestr 可預約日期格式轉換為字串
-        nowtm 現在日期格式轉換為字串
+    timestr 可預約日期格式轉換為字串
+    nowtm 現在日期格式轉換為字串
     """
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
@@ -44,11 +45,11 @@ def check(act: str, pw: str) -> bool:
 def DBcreate() -> None:
     """建立資料表
 
-        iid 自動累加 整數 主索引
-        Name 文字 不可為空
-        Day 文字 不可為空
-        Phone 文字 不可為空 唯一性
-        Headcount 整數 不可為空
+    iid 自動累加 整數 主索引
+    Name 文字 不可為空
+    Day 文字 不可為空
+    Phone 文字 不可為空 唯一性
+    Roomtype 整數 不可為空
 
     """
     try:
@@ -60,7 +61,7 @@ def DBcreate() -> None:
                 Name TEXT NOT NULL,
                 Day TEXT NOT NULL,
                 Phone TEXT UNIQUE NOT NULL,
-                Headcount INTEGER NOT NULL
+                Roomtype INTEGER NOT NULL
                 );"""
         )
         conn.close()
@@ -83,17 +84,18 @@ def DBAll() -> tuple:
         print(f"執行 SELECT 操作時發生錯誤：{error}")
 
 
-def DBnew(name: str, day: str, phone: str, hct: int) -> bool:
+def DBnew(name: str, day: str, phone: str, rt: int) -> bool:
     """使用者在資料庫中新增資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
             """
-                INSERT INTO Booking (Name, Day, Phone, Headcount)
+                INSERT INTO Booking (Name, Day, Phone, Roomtype)
                 SELECT ?, ?, ?, ? WHERE NOT EXISTS (
                     SELECT 1 FROM Booking WHERE Phone=?);
-            """, (name, day, phone, hct, phone),
+            """,
+            (name, day, phone, rt, phone),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
@@ -104,14 +106,14 @@ def DBnew(name: str, day: str, phone: str, hct: int) -> bool:
         return False
 
 
-def DBedit(mname: str, Day: str, uphone: str, hct: int) -> tuple:
+def DBedit(mname: str, Day: str, uphone: str, rt: int) -> tuple:
     """修改資料庫指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
-            "UPDATE Booking SET Day=?, mname=?, Headcount=? WHERE Phone=?;",
-            (Day, mname, hct, uphone),
+            "UPDATE Booking SET Day=?, mname=?, Roomtype=? WHERE Phone=?;",
+            (Day, mname, rt, uphone),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
@@ -161,3 +163,7 @@ def DeleteData(uphone: str) -> None:
         conn.close()
     except Exception as e:
         print(f"=>資料庫連接或資料表建立失敗，錯誤訊息為{e}")
+
+
+# def roomlimint():
+#     if room["one"]

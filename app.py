@@ -13,7 +13,8 @@ from lib import (
     DBsearch,
     DeleteData,
     check,
-    DateControl)
+    DateControl,
+    DBedit)
 
 DBcreate()
 
@@ -32,11 +33,11 @@ def index():
         uname = request.form["uname"]
         uphone = request.form["uphone"]
         Day = request.form["bookdate"]
-        headcount = request.form["headcount"]
-        if (uname == "" or uphone == "" or Day == "" or headcount == ""):
+        roomtype = request.form["roomtype"]
+        if (uname == "" or uphone == "" or Day == "" or roomtype == ""):
             return redirect(url_for("failed"))
         else:
-            if DBnew(uname, Day, uphone, headcount):
+            if DBnew(uname, Day, uphone, roomtype):
                 return redirect(url_for("Success"))
             else:
                 return redirect(url_for("failed"))
@@ -92,7 +93,6 @@ def search():
 
 @app.route("/adminhomepage")  # 管理端主頁
 def Administration():
-
     if "loginAdminId" in session:
         return render_template("Admin.html", account=session["loginAdminId"])
     return render_template("msg.html", msg="請從主頁登入")
@@ -148,3 +148,40 @@ def AdminAlldata():
     if "loginAdminId" in session:
         return render_template("AdminAllBooking.html", DBfatch=DBAll())
     return render_template("msg.html", msg="請從主頁登入")
+
+
+@app.route("/adminedit")  # 管理端修改資料 網頁導向要更改
+def AdminEdit():
+    """管理端修改資料庫中的資料"""
+    if "loginAdminId" in session:
+        if request.method == "POST":
+            uname = request.form["uname"]
+            uphone = request.form["uphone"]
+            Day = request.form["bookdate"]
+            roomtype = request.form["roomtype"]
+            if (uname == "" or uphone == "" or Day == "" or roomtype == ""):
+                return redirect(url_for("failed"))
+            else:
+                if DBedit(uname, Day, uphone, roomtype):
+                    return redirect(url_for("Success"))
+                else:
+                    return redirect(url_for("failed"))
+        return render_template("AdminSearch copy.html")
+    return render_template("msg.html", msg="請從主頁登入")
+
+
+@app.route("/useredit")  # 客戶端修改資料 網頁導向要更改
+def UserEdit():
+    if request.method == "POST":
+        uname = request.form["uname"]
+        uphone = request.form["uphone"]
+        Day = request.form["bookdate"]
+        roomtype = request.form["roomtype"]
+        if (uname == "" or uphone == "" or Day == "" or roomtype == ""):
+            return redirect(url_for("failed"))
+        else:
+            if DBedit(uname, Day, uphone, roomtype):
+                return redirect(url_for("Success"))
+            else:
+                return redirect(url_for("failed"))
+    return render_template("AdminSearch copy.html")

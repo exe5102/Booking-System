@@ -1,61 +1,44 @@
 <!DOCTYPE HTML>
-<html lang="zh-TW">
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
 	<head>
-		<title>線上訂位|</title>
+		<title>訂位查詢系統-管理端</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ url_for('static', filename= 'css/main.css') }}" />
 	</head>
-	<body class="landing is-preload">
+	<body class="is-preload">
 		<div id="page-wrapper">
 
 			<!-- Header -->
-				<header id="header" class="alt">
-					<h1><a href="{{ url_for('index') }}">線上訂位系統</a></h1>
+				<header id="header">
+					<h1><a href="{{ url_for('Administration') }}">線上訂位系統</a></h1>
 					<nav id="nav">
 						<ul>
-							<li><a href="{{ url_for('index') }}">首頁</a></li>
+							<li><a href="{{ url_for('Administration') }}">回管理端首頁</a></li>
 							<li>
 								<a href="#" class="icon solid fa-angle-down"></a>
 								<ul>
-									<li><a href="#booking">立即訂位</a></li>
-									<li><a href="{{ url_for('search') }}">查詢訂位</a></li>
+									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂位資料</a></li>
+									<li><a href="{{ url_for('Adminsearch') }}">查詢指定客戶訂位</a></li>
+									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂位</a></li>
 								</ul>
-							</li>
-							<li><a href='{{ url_for("Adminlogin") }}' class="button">管理者登入</a></li>
+
 						</ul>
 					</nav>
 				</header>
 
-			<!-- Banner -->
-				<section id="banner">
-					<h2>-線上訂位-</h2>
-					<!-- <p>Another fine responsive site template freebie by HTML5 UP.</p> -->
-					<ul class="actions special">
-						<li><a href="#booking" class="button primary">立刻訂位</a></li>
-						<li><a href="{{ url_for('search') }}" class="button">查詢訂位</a></li>
-					</ul>
-				</section>
-
 			<!-- Main -->
 				<section id="main" class="container">
-
-					<section class="box special">
-						<header class="major">
-							<h2>-線上訂位系統-</h2>
-							<p>於預定日期進行訂位</p>
-						</header>
-						<span class="image featured"><img src="static\css\images\homepage.jpg" alt="" /></span>
-					</section>
-
-			<!-- CTA -->
-            <section id="cta" class="container">
-                <a name="booking" id="booking"></a>
-                    <header class="major2">
-                        <br>
-                        <h2>選擇人數日期進行訂位</h2>
-                        <br>
-                        <div class="row gtr-50 gtr-uniform">
+					<header>
+						<h2>訂位查詢</h2>
+						<p>請在下方輸入客戶的電話號碼</p>
+					</header>
+					<div class="row gtr-50 gtr-uniform">
 						<form action="/" method="post">
                             <div>
                                 <select name="roomtype">
@@ -80,9 +63,50 @@
 								</div>
 							</form>
                         </div>
-                    </header>
+					<div class="row">
+						<div class="col-12">
 
-            </section>
+							<!-- Table -->
+
+								<section class="box">
+									<h3>查詢結果</h3>
+
+									<div class="table-wrapper">
+										<table>
+											<thead>
+												<tr>
+													<th><h4>姓名</h4></th>
+													<th><h4>日期</h4></th>
+													<th><h4>電話</h4></th>
+													<th><h4>人數</h4></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% if DBfatch %}
+												<tr>
+
+													<td>{{ DBfatch[1] }}</td>
+													<td>{{ DBfatch[2] }}</td>
+													<td>{{ DBfatch[3] }}</td>
+													<td>{{ DBfatch[4] }}</td>
+												</tr>
+
+												{% else %}
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+												</tr>
+												{% endif %}
+
+											</tbody>
+
+										</table>
+										<ul class="actions special">
+											<li><a href="{{ url_for('Administration') }}#booking" class="button primary">回管理端首頁</a></li>
+										</ul>
+									</div>
 
 			<!-- Footer -->
 				<footer id="footer">
@@ -102,13 +126,13 @@
 		</div>
 
 		<!-- Scripts -->
-			<script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
-			<script src="{{ url_for('static', filename= 'js/jquery.dropotron.min.js') }}"></script>
-			<script src="{{ url_for('static', filename= 'js/jquery.scrollex.min.js') }}"></script>
-			<script src="{{ url_for('static', filename= 'js/browser.min.js') }}"></script>
-			<script src="{{ url_for('static', filename= 'js/breakpoints.min.js') }}"></script>
-			<script src="{{ url_for('static', filename= 'js/util.js') }}"></script>
-			<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.dropotron.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
 
 	</body>
 </html>
