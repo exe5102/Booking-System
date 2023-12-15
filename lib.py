@@ -1,10 +1,11 @@
+import re
 import sqlite3
 import json
 from datetime import datetime, timezone, timedelta
 
 DB_PATH = "booking.db"
 Pass_Data = "pass.json"
-room = {"one": 0, "two": 0, "four": 0}
+Room = {"單人房": 20, "雙人房": 20, "四人房": 20}
 
 
 def DateControl() -> tuple:
@@ -165,5 +166,32 @@ def DeleteData(uphone: str) -> None:
         print(f"=>資料庫連接或資料表建立失敗，錯誤訊息為{e}")
 
 
-# def roomlimint():
-#     if room["one"]
+def roomlimit(roomtype: str) -> bool:
+    """空房計算"""
+    Room[roomtype] -= 1
+    return False if Room[roomtype] < 0 else True
+
+
+def roomstate():
+    """空房資訊的讀取以及字典的初始化"""
+    for record in DBAll():
+        Room[record[4]] -= 1
+
+
+def formatcheck(Phone: str, Email: str) -> bool:  # 待驗證
+    """電子郵件和電話的格式確認"""
+    mailformat = r'[a-zA-Z0-9_.+-]+@[a-zA-Z]+[.a-zA-Z]+'
+    phonformat = r'09\d{8}'
+    if re.search(mailformat, Email) and re.search(phonformat, Phone):
+        return True
+
+# def formatcheck(mod: str, text: str) -> tuple:
+#     match mod:
+#         case "Email":
+#             pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z]+[.a-zA-Z]+'
+#             result = re.search(pattern, text)
+#             return True if result else False
+#         case "Phone":
+#             pattern = r'09\d{8}'
+#             result = re.search(pattern, text)
+#             return True if result else False
