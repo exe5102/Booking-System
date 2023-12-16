@@ -1,11 +1,17 @@
+import configparser
 import re
 import sqlite3
 import json
+import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timezone, timedelta
 
 DB_PATH = "booking.db"
 Pass_Data = "pass.json"
 Room = {"單人房": 20, "雙人房": 20, "四人房": 20}
+config_path = "config.ini"  # 配置文件(.ini)路徑
 
 
 def DateControl() -> tuple:
@@ -51,6 +57,7 @@ def DBcreate() -> None:
     Day 文字 不可為空
     Phone 文字 不可為空 唯一性
     Roomtype 整數 不可為空
+    Email 文字
 
     """
     try:
@@ -62,7 +69,8 @@ def DBcreate() -> None:
                 Name TEXT NOT NULL,
                 Day TEXT NOT NULL,
                 Phone TEXT UNIQUE NOT NULL,
-                Roomtype INTEGER NOT NULL
+                Roomtype INTEGER NOT NULL,
+                Email TEXT
                 );"""
         )
         conn.close()
@@ -124,7 +132,7 @@ def DBedit(mname: str, Day: str, uphone: str, rt: int) -> tuple:
         print(f"執行 SELECT 操作時發生錯誤：{error}")
 
 
-def DBsearch(uphone: tuple) -> tuple:
+def DBsearch(uphone: str) -> tuple:
     """查詢資料庫指定資料，以電話搜尋"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
@@ -180,10 +188,11 @@ def roomstate():
 
 def formatcheck(Phone: str, Email: str) -> bool:  # 待驗證
     """電子郵件和電話的格式確認"""
-    mailformat = r'[a-zA-Z0-9_.+-]+@[a-zA-Z]+[.a-zA-Z]+'
-    phonformat = r'09\d{8}'
+    mailformat = r"[a-zA-Z0-9_.+-]+@[a-zA-Z]+[.a-zA-Z]+"
+    phonformat = r"09\d{8}"
     if re.search(mailformat, Email) and re.search(phonformat, Phone):
         return True
+
 
 # def formatcheck(mod: str, text: str) -> tuple:
 #     match mod:
@@ -195,3 +204,113 @@ def formatcheck(Phone: str, Email: str) -> bool:  # 待驗證
 #             pattern = r'09\d{8}'
 #             result = re.search(pattern, text)
 #             return True if result else False
+
+
+def send_booked_email(receiver_phone: str) -> bool:
+    """寄送訂房成功通知信(mail)給客戶，以電話搜尋"""
+
+    # 取得mail憑證
+    sender_email, sender_password = getManagerCredentials(email=True)
+
+    # 查找客戶資訊(DB需添加mail資訊才能執行)
+    receiver_inf = DBsearch(receiver_phone)
+    receiver_name = receiver_inf[1]
+    receiver_day = receiver_inf[2]
+    receiver_phone = receiver_inf[3]
+    receiver_roomType = receiver_inf[4]
+    receiver_email = (
+        receiver_inf[5]
+        if receiver_inf[5] and formatcheck(receiver_phone, receiver_inf[5])
+        else None
+    )
+
+    if receiver_email is None:
+        print("通知郵件發送失敗，無有效的郵件地址")
+        return False
+
+    # 郵件正文(需優化)
+    html = f"""
+            <h1>訂房成功！</h1>
+            <br>
+            <div>
+                <h3>您的訂房資訊如下：</h3>
+                <p>姓名：{receiver_name}</p>
+                <p>電話：{receiver_phone}</p>
+                <p>房型：{receiver_roomType}</p>
+                <p>訂房日期：{receiver_day}</p>
+            </div>
+            """
+
+    # 創建多部分消息並設置標題
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = "訂房成功通知"
+
+    message.attach(MIMEText(html, "html", "UTF-8"))  # 寄送 HTML 格式的信件
+
+    try:
+        # 建立與SMTP服務器的連接並發送郵件
+        server = smtplib.SMTP("smtp.gmail.com", 587)  # 使用Gmail的SMTP服務器
+        server.ehlo()  # 建立連線並確認SMTP服務器狀態
+        server.starttls()  # 啟用TLS安全
+        server.login(sender_email, sender_password)  # 登入管理者mail
+        server.sendmail(sender_email, receiver_email, message.as_string())  # 寄送給客戶
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"發送通知郵件時出錯：{e}")
+        return False
+
+
+def send_booked_line(receiver_phone: str) -> bool:
+    """推送客戶訂房資訊到管理者的line群組"""
+
+    # 取得Line憑證
+    url, token = getManagerCredentials(line=True)
+
+    # 查找客戶資訊
+    receiver_inf = DBsearch(receiver_phone)
+    receiver_name = receiver_inf[1]
+    receiver_day = receiver_inf[2]
+    receiver_phone = receiver_inf[3]
+    receiver_roomType = receiver_inf[4]
+    receiver_email = receiver_inf[5]
+
+    headers = {"Authorization": "Bearer " + token}  # 設定token
+    data = {
+        "message": f"\n訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}\nemail：{receiver_email}\n房型：{receiver_roomType}\n訂房日期：{receiver_day}"
+    }  # 設定要發送的訊息
+    try:
+        data = requests.post(url, headers=headers, data=data)  # 使用 POST 方法
+        return True
+    except Exception as e:
+        print(e.__traceback__)
+        return False
+
+
+def getManagerCredentials(email: bool = False, line: bool = False) -> tuple:
+    """取得管理者憑證，透過config.ini文件"""
+
+    params = []
+
+    # 讀取配置文件
+    config = configparser.ConfigParser()
+    config.read(config_path)
+
+    # 取得EmailCredentials標籤下的資料
+    sender_email = config.get("EmailCredentials", "sender_email")
+    sender_password = config.get("EmailCredentials", "sender_password")
+
+    # 取得LineCredentials標籤下的資料
+    line_API = config.get("LineCredentials", "Line_Notify_API")
+    line_token = config.get("LineCredentials", "Line_token")
+
+    if email:
+        params.append(sender_email)
+        params.append(sender_password)
+    if line:
+        params.append(line_API)
+        params.append(line_token)
+
+    return tuple(params)
