@@ -5,7 +5,6 @@ from flask import (
     redirect,
     session,
     render_template)
-
 from lib import (
     DBAll,
     DBcreate,
@@ -14,9 +13,14 @@ from lib import (
     DeleteData,
     check,
     DateControl,
-    DBedit)
+    DBedit,
+    formatcheck,
+    roomlimit,
+    roomstate,
+    Room)
 
 DBcreate()
+roomstate()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Final-Projuct"
@@ -34,11 +38,20 @@ def index():
         uphone = request.form["uphone"]
         Day = request.form["bookdate"]
         roomtype = request.form["roomtype"]
+        email = request.form["mail"]
+        # 判斷有無資料缺失
         if (uname == "" or uphone == "" or Day == "" or roomtype == ""):
             return redirect(url_for("failed"))
         else:
-            if DBnew(uname, Day, uphone, roomtype):
-                return redirect(url_for("Success"))
+            if formatcheck(uphone, email) is True:
+                # 先檢查該房型有無空房，再進行訂房程序
+                if Room[roomstate] > 0 and roomlimit(roomtype) is True:
+                    if DBnew(uname, Day, uphone, roomtype):
+                        return redirect(url_for("Success"))
+                    else:
+                        return redirect(url_for("failed"))
+                else:
+                    return redirect(url_for("failed"))
             else:
                 return redirect(url_for("failed"))
     return render_template("index.html", min=DateControl()[0])
@@ -90,6 +103,7 @@ def search():
             return render_template("search.html", DBfatch=DBsearch(uphone))
     return render_template("search.html")
 
+
 @app.route("/room")  # 客戶查詢資料
 def room():
     return render_template("room.html")
@@ -104,7 +118,7 @@ def Administration():
 
 @app.route("/adminlogout")  # 管理端登出
 def Adminlogout():
-    """清空登入狀太，限制頁面載入"""
+    """清空登入狀態，限制頁面載入"""
     session.pop("loginAdminId", None)
     return redirect(url_for("index"))
 
