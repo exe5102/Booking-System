@@ -19,3 +19,5 @@ Jinja2==3.1.2
 MarkupSafe==2.1.3
 
 Werkzeug==3.0.1
+
+requests==2.31.0
