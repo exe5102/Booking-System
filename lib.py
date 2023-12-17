@@ -1,12 +1,13 @@
 import configparser
-import re
-import sqlite3
 import json
-import requests
+import re
 import smtplib
-from email.mime.text import MIMEText
+import sqlite3
+from datetime import datetime, timedelta, timezone
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime, timezone, timedelta
+from email.mime.text import MIMEText
+
+import requests
 
 DB_PATH = "booking.db"
 Pass_Data = "pass.json"
@@ -194,18 +195,6 @@ def formatcheck(Phone: str, Email: str) -> bool:  # 待驗證
         return True
 
 
-# def formatcheck(mod: str, text: str) -> tuple:
-#     match mod:
-#         case "Email":
-#             pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z]+[.a-zA-Z]+'
-#             result = re.search(pattern, text)
-#             return True if result else False
-#         case "Phone":
-#             pattern = r'09\d{8}'
-#             result = re.search(pattern, text)
-#             return True if result else False
-
-
 def send_booked_email(receiver_phone: str) -> bool:
     """寄送訂房成功通知信(mail)給客戶，以電話搜尋"""
 
@@ -255,7 +244,8 @@ def send_booked_email(receiver_phone: str) -> bool:
         server.ehlo()  # 建立連線並確認SMTP服務器狀態
         server.starttls()  # 啟用TLS安全
         server.login(sender_email, sender_password)  # 登入管理者mail
-        server.sendmail(sender_email, receiver_email, message.as_string())  # 寄送給客戶
+        # 寄送給客戶
+        server.sendmail(sender_email, receiver_email, message.as_string())
         server.quit()
         return True
     except Exception as e:
