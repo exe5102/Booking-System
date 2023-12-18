@@ -48,7 +48,7 @@ def index():
             if formatcheck(uphone, email) is True:
                 # 先檢查該房型有無空房，再進行訂房程序
                 if Room[roomtype] > 0 and roomlimit(roomtype) is True:
-                    if DBnew(uname, Day, uphone, roomtype):
+                    if DBnew(uname, Day, uphone, roomtype, email):
                         send_booked_email(uphone)
                         send_booked_line(uphone)
                         return redirect(url_for("Success"))

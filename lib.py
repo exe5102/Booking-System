@@ -94,18 +94,18 @@ def DBAll() -> tuple:
         print(f"執行 SELECT 操作時發生錯誤：{error}")
 
 
-def DBnew(name: str, day: str, phone: str, rt: int) -> bool:
+def DBnew(name: str, day: str, phone: str, rt: int, mail: str) -> bool:
     """使用者在資料庫中新增資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
             """
-                INSERT INTO Booking (Name, Day, Phone, Roomtype)
-                SELECT ?, ?, ?, ? WHERE NOT EXISTS (
+                INSERT INTO Booking (Name, Day, Phone, Roomtype, Email)
+                SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (
                     SELECT 1 FROM Booking WHERE Phone=?);
             """,
-            (name, day, phone, rt, phone),
+            (name, day, phone, rt, mail, phone),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
@@ -254,7 +254,14 @@ def send_booked_email(receiver_phone: str) -> bool:
 
 
 def send_booked_line(receiver_phone: str) -> bool:
-    """推送客戶訂房資訊到管理者的line群組"""
+    """推送客戶訂房資訊到管理者的line群組
+
+    Args:
+        receiver_phone (str): 客戶電話號碼
+
+    Returns:
+        bool: 推送是否成功
+    """
 
     # 取得Line憑證
     url, token = getManagerCredentials(line=True)
@@ -269,7 +276,9 @@ def send_booked_line(receiver_phone: str) -> bool:
 
     headers = {"Authorization": "Bearer " + token}  # 設定token
     data = {
-        "message": f"\n訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}\nemail：{receiver_email}\n房型：{receiver_roomType}\n訂房日期：{receiver_day}"
+        "message": f"訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
+        + f"\nemail：{receiver_email}\n房型：{receiver_roomType}"
+        + f"\n訂房日期：{receiver_day}"
     }  # 設定要發送的訊息
     try:
         data = requests.post(url, headers=headers, data=data)  # 使用 POST 方法
