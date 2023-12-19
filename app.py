@@ -17,7 +17,9 @@ from lib import (
     formatcheck,
     roomlimit,
     roomstate,
-    Room)
+    Room,
+    send_booked_email,
+    send_booked_line)
 
 DBcreate()
 roomstate()
@@ -45,8 +47,10 @@ def index():
         else:
             if formatcheck(uphone, email) is True:
                 # 先檢查該房型有無空房，再進行訂房程序
-                if Room[roomstate] > 0 and roomlimit(roomtype) is True:
-                    if DBnew(uname, Day, uphone, roomtype):
+                if Room[roomtype] > 0 and roomlimit(roomtype) is True:
+                    if DBnew(uname, Day, uphone, roomtype, email):
+                        send_booked_email(uphone)
+                        send_booked_line(uphone)
                         return redirect(url_for("Success"))
                     else:
                         return redirect(url_for("failed"))
@@ -104,7 +108,7 @@ def search():
     return render_template("search.html")
 
 
-@app.route("/room")  # 客戶查詢資料
+@app.route("/room")  # 客戶查詢資料  功能待新增
 def room():
     return render_template("room.html")
 

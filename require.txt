@@ -1,0 +1,2 @@
+db新增email欄位(非必填)
+email通知的html樣式
