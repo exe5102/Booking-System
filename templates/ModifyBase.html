@@ -31,46 +31,10 @@
 			<!-- Main -->
 				<section id="main" class="container">
 					<header>
-						<h2>所有房型</h2>
+						<h2>{% block table %}{% endblock  %}</h2>
+						<p>從下方修改的訂房資料</p>
 					</header>
-					<div class="row">
-						<div class="col-12">
-
-							<!-- Text -->
-								<section class="box">
-										<div class="row gtr-uniform gtr-50">
-											<div class="col-6 col-12-mobilep">
-												<img src="static\css\images\room0.jpg" alt="房間0" height="300px" class="img01">
-											</div>
-											<div class="col-6 col-12-mobilep">
-												<h2>單人房</h2>
-												<p>獨享寧靜的單人房，簡約現代風格營造出獨特氛圍。溫馨燈光下，舒適床鋪等待您放鬆身心。適合獨自旅行或商務出差，為您提供愉悅且寧靜的休憩環境，帶來賓至如歸的感受。</p>
-											</div>
-										</div>
-										<div class="row gtr-uniform gtr-50">
-											<div class="col-6 col-12-mobilep">
-												<img src="static\css\images\room1.jpg" alt="房間1" height="300px" class="img01">
-											</div>
-											<div class="col-6 col-12-mobilep">
-												<h2>雙人房</h2>
-												<p>沉浸在舒適浪漫的雙人房，柔和燈光映照著精心設計的清新空間。寬敞舒適的床鋪，為您打造一個愜意的夜晚，共同編織難以忘懷的美好回憶。</p>
-											</div>
-										</div>
-										<div class="row gtr-uniform gtr-50">
-											<div class="col-6 col-12-mobilep">
-												<img src="static\css\images\room2.jpg" alt="房間2" height="300px" class="img01">
-											</div>
-											<div class="col-6 col-12-mobilep">
-												<h2>四人房</h2>
-												<p>步入寬敞的四人房，獨特的裝潢搭配現代設計，營造出愉悅輕松的氛圍。溫馨家庭空間充滿悠閒感，舒適的床鋪為您和親友提供極致休息，享受一場難忘的旅程。</p>
-											</div>
-										</div>
-									</form>
-
-								</section>
-
-						</div>
-					</div>
+					{% block Box %}{% endblock %}
 
 			<!-- Footer -->
 				<footer id="footer">
@@ -83,6 +47,7 @@
 						<li>&copy; All rights reserved.</li><li>Design: </li>
 					</ul>
 				</footer>
+
 
 		</div>
 

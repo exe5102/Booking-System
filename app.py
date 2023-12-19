@@ -113,6 +113,7 @@ def room():
     return render_template("room.html")
 
 
+
 @app.route("/adminhomepage")  # 管理端主頁
 def Administration():
     if "loginAdminId" in session:
@@ -188,12 +189,12 @@ def AdminEdit():
                     return redirect(url_for("Success"))
                 else:
                     return redirect(url_for("failed"))
-        return render_template("AdminSearch copy.html")
+        return render_template("modify.html")
     return render_template("msg.html", msg="請從主頁登入")
 
 
-@app.route("/useredit")  # 客戶端修改資料 網頁導向要更改
-def UserEdit():
+@app.route("/modify")  # 客戶端修改資料 網頁導向要更改
+def modify():
     if request.method == "POST":
         uname = request.form["uname"]
         uphone = request.form["uphone"]
@@ -206,4 +207,4 @@ def UserEdit():
                 return redirect(url_for("Success"))
             else:
                 return redirect(url_for("failed"))
-    return render_template("AdminSearch copy.html")
+    return render_template("modify.html")
