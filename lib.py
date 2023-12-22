@@ -105,7 +105,7 @@ def DBnew(
     datetime_end = datetime.strptime(day_end, "%Y-%m-%d")
 
     # 若結束日比開始日早，代表輸入錯誤，不允許寫入ＤＢ
-    if datetime_start < datetime_end:
+    if datetime_start > datetime_end:
         return False
 
     try:
@@ -217,7 +217,6 @@ def formatcheck(phone: str, email: str) -> bool:
         return True if re.search(phonformat, phone) else False
 
 
-# 需修改，DBsearch異動，return tuple -> list
 def send_booked_email(receiver_phone: str) -> bool:
     """寄送訂房成功通知信(mail)給客戶，以電話搜尋
 
@@ -233,14 +232,11 @@ def send_booked_email(receiver_phone: str) -> bool:
 
     # 查找客戶資訊
     receiver_inf = DBsearch(receiver_phone)
-    receiver_name = receiver_inf[1]
-    receiver_day_start = receiver_inf[2]
-    receiver_day_end = receiver_inf[3]
-    receiver_phone = receiver_inf[4]
-    receiver_roomType = receiver_inf[5]
+    receiver_name = receiver_inf[0][1]
+    receiver_phone = receiver_inf[0][4]
     receiver_email = (
-        receiver_inf[6]
-        if receiver_inf[6] and formatcheck(receiver_phone, receiver_inf[6])
+        receiver_inf[0][6]
+        if receiver_inf[0][6] and formatcheck(receiver_phone, receiver_inf[0][6])
         else None
     )
 
@@ -256,10 +252,14 @@ def send_booked_email(receiver_phone: str) -> bool:
                 <h3>您的訂房資訊如下：</h3>
                 <p>姓名：{receiver_name}</p>
                 <p>電話：{receiver_phone}</p>
-                <p>房型：{receiver_roomType}</p>
-                <p>訂房日期：{receiver_day_start} ~ {receiver_day_end}</p>
-            </div>
             """
+    for item in receiver_inf:
+        html += f"""
+                    <br>
+                    <p>房型：{item[5]}</p>
+                    <p>訂房日期：{item[2]} ~ {item[3]}</p>
+                """
+    html += "</div>"
 
     # 創建多部分消息並設置標題
     message = MIMEMultipart()
@@ -284,7 +284,6 @@ def send_booked_email(receiver_phone: str) -> bool:
         return False
 
 
-# 需修改，DBsearch異動，return tuple -> list
 def send_booked_line(receiver_phone: str) -> bool:
     """推送客戶訂房資訊到管理者的line群組
 
@@ -300,19 +299,21 @@ def send_booked_line(receiver_phone: str) -> bool:
 
     # 查找客戶資訊
     receiver_inf = DBsearch(receiver_phone)
-    receiver_name = receiver_inf[1]
-    receiver_day_start = receiver_inf[2]
-    receiver_day_end = receiver_inf[3]
-    receiver_phone = receiver_inf[4]
-    receiver_roomType = receiver_inf[5]
-    receiver_email = receiver_inf[6]
+    receiver_name = receiver_inf[0][1]
+    receiver_phone = receiver_inf[0][4]
+    receiver_email = receiver_inf[0][6]
 
     headers = {"Authorization": "Bearer " + token}  # 設定token
-    data = {
-        "message": f"訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
-        + f"\nemail：{receiver_email}\n房型：{receiver_roomType}"
-        + f"\n訂房日期：{receiver_day_start} ~ {receiver_day_end}"
-    }  # 設定要發送的訊息
+
+    # 設定要發送的訊息
+    context = (
+        f"訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
+        + f"\nemail：{receiver_email}\n"
+    )
+    for item in receiver_inf:  # 訊息中添加從同個人的多筆訂房取得的房型和時間
+        context += f"\n房型：{item[5]}" + f"\n訂房日期：{item[2]} ~ {item[3]}\n"
+    data = {"message": context}
+
     try:
         data = requests.post(url, headers=headers, data=data)  # 使用 POST 方法
         return True
