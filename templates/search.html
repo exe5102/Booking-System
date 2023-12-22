@@ -7,47 +7,47 @@
 {% block Post %}<form action="/search" method="post">{% endblock  %}
 
 {% block Box %}
-	<div class="row">
-		<div class="col-12">
+<div class="row">
+	<div class="col-12">
 
-			<!-- Table -->
+		<!-- Table -->
+		<section class="box">
+			<h3>查詢結果</h3>
 
-				<section class="box">
-					<h3>查詢結果</h3>
-
-					<div class="table-wrapper">
-						<table>
-							<thead>
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th><h4>姓名</h4></th>
+							<th><h4>開始日期</h4></th>
+							<th><h4>結束日期</h4></th>
+							<th><h4>電話</h4></th>
+							<th><h4>房型</h4></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if DBfatch %}
+							{% for record in DBfatch %}
 								<tr>
-									<th><h4>姓名</h4></th>
-									<th><h4>日期</h4></th>
-									<th><h4>電話</h4></th>
-									<th><h4>人數</h4></th>
+									<td>{{ record[1] }}</td>
+									<td>{{ record[2] }}</td>
+									<td>{{ record[3] }}</td>
+									<td>{{ record[4] }}</td>
+									<td>{{ record[5] }}</td>
 								</tr>
-							</thead>
-							<tbody>
-								{% if DBfatch%}
-								<tr>
-									<td>{{ DBfatch[1] }}</td>
-									<td>{{ DBfatch[2] }}</td>
-									<td>{{ DBfatch[3] }}</td>
-									<td>{{ DBfatch[4] }}</td>
-								</tr>
-
-								{% else %}
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								{% endif %}
-
-							</tbody>
-
-						</table>
-						<ul class="actions special">
-							<li><a href="{{ url_for('index') }}" class="button primary">回首頁</a></li>
-						</ul>
-					</div>
+							{% endfor %}
+						{% else %}
+							<tr>
+								<td colspan="5">沒有查詢到資料</td>
+							</tr>
+						{% endif %}
+					</tbody>
+				</table>
+				<ul class="actions special">
+					<li><a href="{{ url_for('index') }}" class="button primary">回首頁</a></li>
+				</ul>
+			</div>
+		</section>
+	</div>
+</div>
 {% endblock %}
