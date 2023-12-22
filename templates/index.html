@@ -53,7 +53,7 @@
                 <a name="booking" id="booking"></a>
                     <header class="major2">
                         <br>
-                        <h2>選擇人數日期進行訂房</h2>
+                        <h2>進行訂房</h2>
                         <br>
                         <div class="row gtr-50 gtr-uniform">
 						<form action="/" method="post">
@@ -70,6 +70,8 @@
 							<br>
                             <div class="col-6 col-12-mobilep">
                                 <input type="date" name="bookdate" id="bookdate" value="{{min}}" min="{{min}}">
+								<span>~</span>
+                                <input type="date" name="bookEndDate" id="bookEndDate" value="{{min}}" min="{{min}}">
                             </div>
 							<br>
                                 <div class="col-12">
