@@ -62,9 +62,8 @@
 						<div class="col-12">
 
 							<!-- Table -->
-
-								<section class="box">
-									<h3>查詢結果</h3>
+							<section class="box">
+								<h3>查詢結果</h3>
 
 									<div class="table-wrapper">
 										<table>
@@ -84,25 +83,24 @@
 													<td>{{ DBfatch[2] }}</td>
 													<td>{{ DBfatch[3] }}</td>
 													<td>{{ DBfatch[4] }}</td>
-													<td><a href="{{ url_for('modify') }}" class="button">修改</a></td>
 												</tr>
 
 												{% else %}
 												<tr>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+													<td colspan="5">沒有查詢到資料</td>
 												</tr>
-												{% endif %}
+											{% endif %}
+										</tbody>
+									</table>
 
-											</tbody>
-
-										</table>
-										<ul class="actions special">
-											<li><a href="{{ url_for('Administration') }}#booking" class="button primary">回管理端首頁</a></li>
-										</ul>
-									</div>
+									<ul class="actions special">
+										<li><a href="{{ url_for('Administration') }}" class="button primary">回管理端首頁</a></li>
+									</ul>
+								</div>
+							</section>
+						</div>
+					</div>
+				</section>
 
 			<!-- Footer -->
 				<footer id="footer">

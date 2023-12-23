@@ -39,32 +39,48 @@
 						<p>歡迎下次光臨</p>
 						<div class="row">
 							<div class="col-12">
+
 								<!-- Table -->
-									<section class="box">
-										<h3>已刪除以下訂房資料</h3>
-										<div class="table-wrapper">
-											<table>
-												<thead>
+								<section class="box">
+									<h3>已刪除以下訂房資料</h3>
+
+									<div class="table-wrapper">
+										<table>
+											<thead>
+												<tr>
+													<th><h4>姓名</h4></th>
+													<th><h4>開始日期</h4></th>
+													<th><h4>結束日期</h4></th>
+													<th><h4>電話</h4></th>
+													<th><h4>房型</h4></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% if DBfatch %}
+													{% for record in DBfatch %}
+														<tr>
+															<td>{{ record[1] }}</td>
+															<td>{{ record[2] }}</td>
+															<td>{{ record[3] }}</td>
+															<td>{{ record[4] }}</td>
+															<td>{{ record[5] }}</td>
+														</tr>
+													{% endfor %}
+												{% else %}
 													<tr>
-														<th><h4>姓名</h4></th>
-														<th><h4>日期</h4></th>
-														<th><h4>電話</h4></th>
-														<th><h4>人數</h4></th>
+														<td colspan="5">沒有查詢到資料</td>
 													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>{{ DBfatch[1] }}</td>
-														<td>{{ DBfatch[2] }}</td>
-														<td>{{ DBfatch[3] }}</td>
-														<td>{{ DBfatch[4] }}</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-						<ul class="actions special">
-							<li><a href="{{ url_for('Administration') }}" class="button primary">回管理端首頁</a></li>
-						</ul>
+												{% endif %}
+											</tbody>
+										</table>
+
+										<ul class="actions special">
+											<li><a href="{{ url_for('Administration') }}" class="button primary">回管理端首頁</a></li>
+										</ul>
+									</div>
+								</section>
+							</div>
+						</div>
 					</header>
 
 			<!-- Footer -->
