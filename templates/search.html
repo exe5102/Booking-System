@@ -27,13 +27,15 @@
 					</thead>
 					<tbody>
 						{% if DBfatch %}
+							{% for record in DBfatch %}
 								<tr>
-									<td>{{ DBfatch[1] }}</td>
-									<td>{{ DBfatch[2] }}</td>
-									<td>{{ DBfatch[3] }}</td>
-									<td>{{ DBfatch[4] }}</td>
-									<td>{{ DBfatch[5] }}</td>
+									<td>{{ record[1] }}</td>
+									<td>{{ record[2] }}</td>
+									<td>{{ record[3] }}</td>
+									<td>{{ record[4] }}</td>
+									<td>{{ record[5] }}</td>
 								</tr>
+							{% endfor %}
 						{% else %}
 							<tr>
 								<td colspan="5">沒有查詢到資料</td>

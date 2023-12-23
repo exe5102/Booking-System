@@ -115,7 +115,6 @@ def room():
     return render_template("room.html")
 
 
-
 @app.route("/adminhomepage")  # 管理端主頁
 def Administration():
     if "loginAdminId" in session:
@@ -161,7 +160,8 @@ def Adminsearch():
             if DBsearch(uphone) is None:
                 return render_template("ResultSuccessFailadmin.html")
             else:
-                return render_template("AdminSearch.html", DBfatch=DBsearch(uphone))
+                return render_template("AdminSearch.html",
+                                       DBfatch=DBsearch(uphone))
         return render_template("AdminSearch.html")
     return render_template("msg.html", msg="請從主頁登入")
 
@@ -181,12 +181,13 @@ def AdminEdit():
         if request.method == "POST":
             uname = request.form["uname"]
             uphone = request.form["uphone"]
-            Day = request.form["bookdate"]
+            startDay = request.form["bookdate"]
+            endDay = request.form["bookEndDate"]
             roomtype = request.form["roomtype"]
-            if uname == "" or uphone == "" or Day == "" or roomtype == "":
+            if uname == "" or uphone == "" or startDay == "" or endDay == "" or roomtype == "":
                 return redirect(url_for("failed"))
             else:
-                if DBedit(uname, Day, uphone, roomtype):
+                if DBedit(uname, startDay, endDay, uphone, roomtype):
                     return redirect(url_for("Success"))
                 else:
                     return redirect(url_for("failed"))
@@ -199,12 +200,13 @@ def modify():
     if request.method == "POST":
         uname = request.form["uname"]
         uphone = request.form["uphone"]
-        Day = request.form["bookdate"]
+        startDay = request.form["bookdate"]
+        endDay = request.form["bookEndDate"]
         roomtype = request.form["roomtype"]
-        if uname == "" or uphone == "" or Day == "" or roomtype == "":
+        if uname == "" or uphone == "" or startDay == "" or endDay == "" or roomtype == "":
             return redirect(url_for("failed"))
         else:
-            if DBedit(uname, Day, uphone, roomtype):
+            if DBedit(uname, startDay, endDay, uphone, roomtype):
                 return redirect(url_for("Success"))
             else:
                 return redirect(url_for("failed"))
