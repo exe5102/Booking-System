@@ -27,7 +27,7 @@ def DateControl() -> tuple:
     """
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
-    minday = dt2 + timedelta(days=7)    # 在當前日期基礎上加7天
+    minday = dt2 + timedelta(days=7)  # 在當前日期基礎上加7天
     timestr = minday.strftime("%Y-%m-%d")
     nowtm = dt2.strftime("%Y-%m-%d")
 
@@ -176,16 +176,28 @@ def DBTableDelete() -> None:
         print(f"執行 DELETE 操作時發生錯誤：{error}")
 
 
-def DeleteData(uphone: str) -> None:
+def DeleteData(uphone: str, mname: str | None, day_start: str | None,
+               day_end: str | None, rt: int | None) -> bool:
     """刪除資料庫中的指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
-        cursor.execute("delete from Booking where Phone=?", (uphone,))
+
+        # 依更精確的資訊刪除指定訂房，否則刪除此電話的所有訂房
+        if mname or day_end or day_start or rt:
+            cursor.execute(
+                """delete from Booking
+                where DayStart=?, DayEnd=?, mname=?, Roomtype=?, Phone=?
+                """, (day_start, day_end, mname, rt, uphone))
+        else:
+            cursor.execute("delete from Booking where Phone=?", (uphone,))
+
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
         print(f"=>資料庫連接或資料表建立失敗，錯誤訊息為{e}")
+        return False
 
 
 def roomlimit(roomtype: str) -> bool:  # 用途?
@@ -237,7 +249,8 @@ def send_booked_email(receiver_phone: str) -> bool:
     receiver_phone = receiver_inf[0][4]
     receiver_email = (
         receiver_inf[0][6]
-        if receiver_inf[0][6] and formatcheck(receiver_phone, receiver_inf[0][6])
+        if receiver_inf[0][6] and formatcheck(receiver_phone,
+                                              receiver_inf[0][6])
         else None
     )
 
