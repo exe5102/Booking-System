@@ -27,9 +27,10 @@ def DateControl() -> tuple:
     """
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
-    minday = dt2.replace(day=dt2.day + 7)
-    timestr = "".join(minday.strftime("%Y-%m-%d"))
-    nowtm = "".join(dt2.strftime("%Y-%m-%d"))
+    minday = dt2 + timedelta(days=7)    # 在當前日期基礎上加7天
+    timestr = minday.strftime("%Y-%m-%d")
+    nowtm = dt2.strftime("%Y-%m-%d")
+
     return timestr, nowtm
 
 
