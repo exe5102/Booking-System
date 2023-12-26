@@ -316,13 +316,13 @@ def send_booked_line(receiver_phone: str) -> bool:
     receiver_inf = DBsearch(receiver_phone)
     receiver_name = receiver_inf[0][1]
     receiver_phone = receiver_inf[0][4]
-    receiver_email = receiver_inf[0][6]
+    receiver_email = receiver_inf[0][6] if receiver_inf[0][6] else "X"
 
     headers = {"Authorization": "Bearer " + token}  # 設定token
 
     # 設定要發送的訊息
     context = (
-        f"訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
+        f"\n訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
         + f"\nemail：{receiver_email}\n"
     )
     for item in receiver_inf:  # 訊息中添加從同個人的多筆訂房取得的房型和時間
