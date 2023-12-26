@@ -176,8 +176,8 @@ def DBTableDelete() -> None:
         print(f"執行 DELETE 操作時發生錯誤：{error}")
 
 
-def DeleteData(uphone: str, mname: str | None, day_start: str | None,
-               day_end: str | None, rt: int | None) -> bool:
+def DeleteData(uphone: str, mname: str = None, day_start: str = None,
+               day_end: str = None, rt: int = None) -> bool:
     """刪除資料庫中的指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
@@ -192,6 +192,7 @@ def DeleteData(uphone: str, mname: str | None, day_start: str | None,
         else:
             cursor.execute("delete from Booking where Phone=?", (uphone,))
 
+        print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
         conn.close()
         return True
