@@ -115,7 +115,8 @@ def DBnew(
         #  不做重複檢查，一個人可定多房
         cursor.execute(
             """
-                INSERT INTO Booking (Name, DayStart, DayEnd, Phone, Roomtype, Email)
+                INSERT INTO Booking
+                (Name, DayStart, DayEnd, Phone, Roomtype, Email)
                 VALUES (?, ?, ?, ?, ?, ?);
             """,
             (name, day_start, day_end, phone, rt, mail),
@@ -130,13 +131,15 @@ def DBnew(
     return False
 
 
-def DBedit(mname: str, day_start: str, day_end: str, uphone: str, rt: int) -> tuple:
+def DBedit(mname: str, day_start: str, day_end: str,
+           uphone: str, rt: int) -> tuple:
     """修改資料庫指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
-            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=? WHERE Phone=?;",
+            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=?\
+            WHERE Phone=?;",
             (day_start, day_end, mname, rt, uphone),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
