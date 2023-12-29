@@ -27,9 +27,10 @@ def DateControl() -> tuple:
     """
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
-    minday = dt2.replace(day=dt2.day + 7)
-    timestr = "".join(minday.strftime("%Y-%m-%d"))
-    nowtm = "".join(dt2.strftime("%Y-%m-%d"))
+    minday = dt2 + timedelta(days=7)  # 在當前日期基礎上加7天
+    timestr = minday.strftime("%Y-%m-%d")
+    nowtm = dt2.strftime("%Y-%m-%d")
+
     return timestr, nowtm
 
 
@@ -114,7 +115,8 @@ def DBnew(
         #  不做重複檢查，一個人可定多房
         cursor.execute(
             """
-                INSERT INTO Booking (Name, DayStart, DayEnd, Phone, Roomtype, Email)
+                INSERT INTO Booking
+                (Name, DayStart, DayEnd, Phone, Roomtype, Email)
                 VALUES (?, ?, ?, ?, ?, ?);
             """,
             (name, day_start, day_end, phone, rt, mail),
@@ -129,13 +131,15 @@ def DBnew(
     return False
 
 
-def DBedit(mname: str, day_start: str, day_end: str, uphone: str, rt: int) -> tuple:
+def DBedit(mname: str, day_start: str, day_end: str,
+           uphone: str, rt: int) -> tuple:
     """修改資料庫指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
-            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=? WHERE Phone=?;",
+            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=?\
+            WHERE Phone=?;",
             (day_start, day_end, mname, rt, uphone),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
@@ -175,16 +179,29 @@ def DBTableDelete() -> None:
         print(f"執行 DELETE 操作時發生錯誤：{error}")
 
 
-def DeleteData(uphone: str) -> None:
+def DeleteData(uphone: str, mname: str = None, day_start: str = None,
+               day_end: str = None, rt: int = None) -> bool:
     """刪除資料庫中的指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
-        cursor.execute("delete from Booking where Phone=?", (uphone,))
+
+        # 依更精確的資訊刪除指定訂房，否則刪除此電話的所有訂房
+        if mname or day_end or day_start or rt:
+            cursor.execute(
+                """delete from Booking
+                where DayStart=?, DayEnd=?, mname=?, Roomtype=?, Phone=?
+                """, (day_start, day_end, mname, rt, uphone))
+        else:
+            cursor.execute("delete from Booking where Phone=?", (uphone,))
+
+        print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
         print(f"=>資料庫連接或資料表建立失敗，錯誤訊息為{e}")
+        return False
 
 
 def roomlimit(roomtype: str) -> bool:  # 用途?
@@ -236,7 +253,8 @@ def send_booked_email(receiver_phone: str) -> bool:
     receiver_phone = receiver_inf[0][4]
     receiver_email = (
         receiver_inf[0][6]
-        if receiver_inf[0][6] and formatcheck(receiver_phone, receiver_inf[0][6])
+        if receiver_inf[0][6] and formatcheck(receiver_phone,
+                                              receiver_inf[0][6])
         else None
     )
 
@@ -301,13 +319,13 @@ def send_booked_line(receiver_phone: str) -> bool:
     receiver_inf = DBsearch(receiver_phone)
     receiver_name = receiver_inf[0][1]
     receiver_phone = receiver_inf[0][4]
-    receiver_email = receiver_inf[0][6]
+    receiver_email = receiver_inf[0][6] if receiver_inf[0][6] else "X"
 
     headers = {"Authorization": "Bearer " + token}  # 設定token
 
     # 設定要發送的訊息
     context = (
-        f"訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
+        f"\n訂房成功！\n客戶姓名：{receiver_name}\n電話：{receiver_phone}"
         + f"\nemail：{receiver_email}\n"
     )
     for item in receiver_inf:  # 訊息中添加從同個人的多筆訂房取得的房型和時間

@@ -184,7 +184,13 @@ def AdminEdit():
             startDay = request.form["bookdate"]
             endDay = request.form["bookEndDate"]
             roomtype = request.form["roomtype"]
-            if uname == "" or uphone == "" or startDay == "" or endDay == "" or roomtype == "":
+            if (
+                uname == ""
+                or uphone == ""
+                or startDay == ""
+                or endDay == ""
+                or roomtype == ""
+            ):
                 return redirect(url_for("failed"))
             else:
                 if DBedit(uname, startDay, endDay, uphone, roomtype):
@@ -203,7 +209,13 @@ def modify():
         startDay = request.form["bookdate"]
         endDay = request.form["bookEndDate"]
         roomtype = request.form["roomtype"]
-        if uname == "" or uphone == "" or startDay == "" or endDay == "" or roomtype == "":
+        if (
+            uname == ""
+            or uphone == ""
+            or startDay == ""
+            or endDay == ""
+            or roomtype == ""
+        ):
             return redirect(url_for("failed"))
         else:
             if DBedit(uname, startDay, endDay, uphone, roomtype):
