@@ -174,7 +174,7 @@ def AdminAlldata():
     return render_template("msg.html", msg="請從主頁登入")
 
 
-@app.route("/adminedit")  # 管理端修改資料 網頁導向要更改
+@app.route("/adminedit", methods=["GET", "POST"])  # 管理端修改資料 網頁導向要更改
 def AdminEdit():
     """管理端修改資料庫中的資料"""
     if "loginAdminId" in session:
@@ -195,7 +195,7 @@ def AdminEdit():
     return render_template("msg.html", msg="請從主頁登入")
 
 
-@app.route("/modify")  # 客戶端修改資料 網頁導向要更改
+@app.route("/modify", methods=["GET", "POST"])  # 客戶端修改資料 網頁導向要更改
 def modify():
     if request.method == "POST":
         uname = request.form["uname"]
