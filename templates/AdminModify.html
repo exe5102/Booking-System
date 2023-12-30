@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>訂房資料修改系統-管理端</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename= 'css/main.css') }}" />
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1><a href="{{ url_for('Administration') }}">線上訂房系統</a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="{{ url_for('Administration') }}">回管理端首頁</a></li>
+							<li>
+								<a href="#" class="icon solid fa-angle-down"></a>
+								<ul>
+									<li><a href="{{ url_for('AdminAlldata') }}">查看所有訂房資料</a></li>
+									<li><a href="{{ url_for('Adminsearch') }}">查詢修改指定客戶訂房</a></li>
+									<li><a href="{{ url_for('Admindelete') }}">取消指定客戶訂房</a></li>
+								</ul>
+
+						</ul>
+					</nav>
+				</header>
+
+			<!-- Main -->
+				<section id="main" class="container">
+					<header>
+						<h2>訂房查詢</h2>
+						<p>請在下方輸入客戶的電話號碼</p>
+					</header>
+					<div class="row">
+						<div class="col-12">
+
+							<!-- Text -->
+								<section class="box">
+									<form action="/adminsearch" method="post">
+										<div class="row gtr-uniform gtr-50">
+											<div class="col-9 col-12-mobilep">
+												<input type="text" name="Sphone" id="Sphone" value="" placeholder="電話號碼" />
+											</div>
+											<div class="col-3 col-12-mobilep">
+												<input type="submit" value="Enter" class="fit" />
+											</div>
+										</div>
+									</form>
+
+								</section>
+
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+
+							<!-- Table -->
+							<section class="box">
+								<h3>查詢結果</h3>
+
+									<div class="table-wrapper">
+										<table>
+											<thead>
+												<tr>
+													<th><h4>姓名</h4></th>
+													<th><h4>開始日期</h4></th>
+													<th><h4>結束日期</h4></th>
+													<th><h4>電話</h4></th>
+													<th><h4>房型</h4></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% if DBfatch %}
+													{% for record in DBfatch %}
+														<tr>
+															<td>{{ record[1] }}</td>
+															<td>{{ record[2] }}</td>
+															<td>{{ record[3] }}</td>
+															<td>{{ record[4] }}</td>
+															<td>{{ record[5] }}</td>
+															<td><a href="{{ url_for('modify') }}" class="button">修改</a></td>
+														</tr>
+													{% endfor %}
+												{% else %}
+													<tr>
+														<td colspan="5">沒有查詢到資料</td>
+													</tr>
+												{% endif %}
+										</tbody>
+									</table>
+
+									<ul class="actions special">
+										<li><a href="{{ url_for('Administration') }}" class="button primary">回管理端首頁</a></li>
+									</ul>
+								</div>
+							</section>
+						</div>
+					</div>
+				</section>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; All rights reserved.</li><li>Design: </li>
+					</ul>
+				</footer>
+
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.dropotron.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+
+	</body>
+</html>

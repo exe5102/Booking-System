@@ -197,7 +197,7 @@ def AdminEdit():
                     return redirect(url_for("Success"))
                 else:
                     return redirect(url_for("failed"))
-        return render_template("modify.html")
+        return render_template("AdminModify.html")
     return render_template("msg.html", msg="請從主頁登入")
 
 
