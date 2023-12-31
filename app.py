@@ -203,9 +203,9 @@ def AdminEdit():
 
 @app.route("/modify", methods=["GET", "POST"])  # 客戶端修改資料 網頁導向要更改
 def modify():
+    uphone = request.args.get("data")
     if request.method == "POST":
         uname = request.form["uname"]
-        uphone = request.form["uphone"]
         startDay = request.form["bookdate"]
         endDay = request.form["bookEndDate"]
         roomtype = request.form["roomtype"]
@@ -222,4 +222,4 @@ def modify():
                 return redirect(url_for("Success"))
             else:
                 return redirect(url_for("failed"))
-    return render_template("modify.html")
+    return render_template("modify.html", DBfatch=DBsearch(uphone))

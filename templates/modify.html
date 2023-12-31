@@ -4,14 +4,14 @@
 
 {% block table %}訂房資料修改{% endblock  %}
 
-{% block Post %}<form action="/useredit" method="post">{% endblock  %}
+{% block Post %}<form action="/modify" method="post">{% endblock  %}
 
 {% block Box %}
 	<div class="row">
 		<div class="col-12">
 
 			<!-- Table -->
-
+				
 				<section class="box">
 					<h3>修改訂單資料</h3>
 
@@ -22,28 +22,35 @@
 									<th><h4>姓名</h4></th>
 									<th><h4>日期</h4></th>
 									<th><h4>電話</h4></th>
-									<th><h4>人數</h4></th>
+									<th><h4>房型</h4></th>
 								</tr>
 							</thead>
-								{% if DBfatch%}
-									<input type="text" name="uname" id="uname" value="{{ DBfetch[1] }}" placeholder="姓名" />
-									<input type="date" name="bookdate" id="bookdate" value="{{DBfetch[2]}}" min="{{min}}">
-									<input type="text" name="uphone" id="uphone" value="{{ DBfetch[3] }}" placeholder="電話(ex: 09xxxxxxxx)" />
-									
-										<select name="roomtype">
-											<option>請選擇房型</option>
-											<option value="單人房" {% if DBfetch[4] == '單人房' %}selected{% endif %}>單人房</option>
-											<option value="雙人房" {% if DBfetch[4] == '雙人房' %}selected{% endif %}>雙人房</option>
-											<option value="四人房" {% if DBfetch[4] == '四人房' %}selected{% endif %}>四人房</option>
-                                		</select>
 
-
-								{% endif %}
-
+								<tbody>
+									{% if DBfatch %}
+										{% for record in DBfatch %}
+											<tr>
+												<td>{{ record[1] }}</td>
+												<td>{{ record[2] }}</td>
+												<td>{{ record[3] }}</td>
+												<td>{{ record[4] }}</td>
+												<td>{{ record[5] }}</td>
+											</tr>
+										{% endfor %}
+									{% else %}
+										<tr>
+											<td colspan="5">沒有查詢到資料</td>
+										</tr>
+									{% endif %}
+								</tbody>
 
 						</table>
 						<ul class="actions special">
 							<li><a href="{{ url_for('index') }}" class="button primary">回首頁</a></li>
 						</ul>
 					</div>
+				</section>
+		</div>
+	</div>
+</form>
 {% endblock %}
