@@ -91,7 +91,7 @@
 																	<option value="四人房" {% if record[5] == '四人房' %}selected{% endif %}>四人房</option>
 																</select>
 															</td>
-															<td><a href="{{ url_for('modify', data=record[4]) }}" class="button">送出</a></td>
+															<td><a href="{{ url_for('modify', id=record[0]) }}" class="button">送出</a></td>
 														</tr>
 													{% endfor %}
 												{% else %}

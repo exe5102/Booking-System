@@ -34,7 +34,7 @@
 									<td>{{ record[3] }}</td>
 									<td>{{ record[4] }}</td>
 									<td>{{ record[5] }}</td>
-									<td><a href="{{ url_for('modify', data=record[4]) }}" class="button">修改</a></td>
+									<td><a href="{{ url_for('adminmodify', id=record[0]) }}" class="button">修改</a></td>
 								</tr>
 							{% endfor %}
 						{% else %}

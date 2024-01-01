@@ -131,16 +131,16 @@ def DBnew(
     return False
 
 
-def DBedit(mname: str, day_start: str, day_end: str,
+def DBedit(iid: str, mname: str, day_start: str, day_end: str,
            uphone: str, rt: int) -> tuple:
     """修改資料庫指定資料"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
-            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=?\
-            WHERE Phone=?;",
-            (day_start, day_end, mname, rt, uphone),
+            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=?, Phone=?\
+            WHERE iid=?;",
+            (day_start, day_end, mname, rt, uphone, iid),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
