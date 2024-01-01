@@ -80,12 +80,18 @@
 												{% if DBfatch %}
 													{% for record in DBfatch %}
 														<tr>
-															<td>{{ record[1] }}</td>
-															<td>{{ record[2] }}</td>
-															<td>{{ record[3] }}</td>
-															<td>{{ record[4] }}</td>
-															<td>{{ record[5] }}</td>
-															<td><a href="{{ url_for('modify') }}" class="button">修改</a></td>
+															<td><input type="text" name="uname" id="uname" value="{{ record[1] }}" placeholder="姓名" /></td>
+															<td><input type="date" name="bookdate" id="bookdate" value="{{ record[2] }}" min="{{min}}"></td>
+															<td><input type="date" name="bookEndDate" id="bookEndDate" value="{{ record[3] }}" min="{{min}}"></td>
+															<td><input type="text" name="uphone" id="uphone" value="{{ record[4] }}" placeholder="電話(ex: 09xxxxxxxx)" /></td>
+															<td><select name="roomtype" id="roomtype">
+																	<option>請選擇房型</option>
+																	<option value="單人房" {% if record[5] == '單人房' %}selected{% endif %}>單人房</option>
+																	<option value="雙人房" {% if record[5] == '雙人房' %}selected{% endif %}>雙人房</option>
+																	<option value="四人房" {% if record[5] == '四人房' %}selected{% endif %}>四人房</option>
+																</select>
+															</td>
+															<td><a href="{{ url_for('modify', data=record[4]) }}" class="button">送出</a></td>
 														</tr>
 													{% endfor %}
 												{% else %}

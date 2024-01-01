@@ -174,10 +174,11 @@ def AdminAlldata():
     return render_template("msg.html", msg="請從主頁登入")
 
 
-@app.route("/adminedit", methods=["GET", "POST"])  # 管理端修改資料 網頁導向要更改
+@app.route("/AdminModify", methods=["GET", "POST"])  # 管理端修改資料 網頁導向要更改
 def AdminEdit():
     """管理端修改資料庫中的資料"""
     if "loginAdminId" in session:
+        uphone = request.args.get("data")
         if request.method == "POST":
             uname = request.form["uname"]
             uphone = request.form["uphone"]
@@ -197,7 +198,7 @@ def AdminEdit():
                     return redirect(url_for("Success"))
                 else:
                     return redirect(url_for("failed"))
-        return render_template("AdminModify.html")
+        return render_template("AdminModify.html", DBfatch=DBsearch(uphone))
     return render_template("msg.html", msg="請從主頁登入")
 
 
