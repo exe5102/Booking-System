@@ -4,14 +4,11 @@
 
 {% block table %}訂房資料修改{% endblock  %}
 
-{% block Post %}<form action="/modify" method="post">{% endblock  %}
-
 {% block Box %}
 	<div class="row">
 		<div class="col-12">
 
 			<!-- Table -->
-				
 				<section class="box">
 					<h3>修改訂單資料</h3>
 
@@ -25,8 +22,9 @@
 									<th><h4>電話</h4></th>
 									<th><h4>房型</h4></th>
 								</tr>
-							</thead>
 
+							</thead>
+							<form action="/modify" method="post">
 								<tbody>
 									{% if DBfatch %}
 										{% for record in DBfatch %}
@@ -36,13 +34,13 @@
 												<td><input type="date" name="bookEndDate" id="bookEndDate" value="{{ record[3] }}" min="{{min}}"></td>
 												<td><input type="text" name="uphone" id="uphone" value="{{ record[4] }}" placeholder="電話(ex: 09xxxxxxxx)" /></td>
 												<td><select name="roomtype" id="roomtype">
-														<option>請選擇房型</option>
 														<option value="單人房" {% if record[5] == '單人房' %}selected{% endif %}>單人房</option>
 														<option value="雙人房" {% if record[5] == '雙人房' %}selected{% endif %}>雙人房</option>
 														<option value="四人房" {% if record[5] == '四人房' %}selected{% endif %}>四人房</option>
 													</select>
 												</td>
-												<td><a href="{{ url_for('modify', data=record[4]) }}" class="button">送出</a></td>
+												<input type="hidden" name="id" value="{{ record[0] }}">
+												<td><input type="submit" value="送出"></td>
 											</tr>
 										{% endfor %}
 									{% else %}
@@ -51,7 +49,7 @@
 										</tr>
 									{% endif %}
 								</tbody>
-
+							</form>
 						</table>
 						<ul class="actions special">
 							<li><a href="{{ url_for('index') }}" class="button primary">回首頁</a></li>
@@ -60,5 +58,5 @@
 				</section>
 		</div>
 	</div>
-</form>
+
 {% endblock %}

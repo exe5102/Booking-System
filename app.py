@@ -106,7 +106,8 @@ def search():
     """
     if request.method == "POST":
         uphone = request.form["Sphone"]
-        return render_template("search.html", DBfatch=DBsearch(uphone))
+        return render_template("search.html",
+                               DBfatch=DBsearch("phone", uphone))
     return render_template("search.html")
 
 
@@ -137,7 +138,7 @@ def Admindelete():
     if "loginAdminId" in session:
         if request.method == "POST":
             uphone = request.form["Sphone"]
-            data = DBsearch(uphone)
+            data = DBsearch("phone", uphone)
             if data is not None:
                 DeleteData(uphone)
                 return render_template("ResultDelete.html", DBfatch=data)
@@ -157,11 +158,12 @@ def Adminsearch():
     if "loginAdminId" in session:
         if request.method == "POST":
             uphone = request.form["Sphone"]
-            if DBsearch(uphone) is None:
+            if DBsearch("phone", uphone) is None:
                 return render_template("ResultSuccessFailadmin.html")
             else:
-                return render_template("AdminSearch.html",
-                                       DBfatch=DBsearch(uphone))
+                return render_template(
+                    "AdminSearch.html", DBfatch=DBsearch("phone", uphone)
+                )
         return render_template("AdminSearch.html")
     return render_template("msg.html", msg="請從主頁登入")
 
@@ -177,49 +179,47 @@ def AdminAlldata():
 @app.route("/adminedit", methods=["GET", "POST"])  # 管理端修改資料 網頁導向要更改
 def AdminEdit():
     """管理端修改資料庫中的資料"""
+
     if "loginAdminId" in session:
-        uphone = request.args.get("id")
+        id = request.args.get("id")
         if request.method == "POST":
+            id = request.form["id"]
             uname = request.form["uname"]
+            uphone = request.form["uphone"]
             startDay = request.form["bookdate"]
             endDay = request.form["bookEndDate"]
             roomtype = request.form["roomtype"]
             if (
                 uname == ""
-                or uphone == ""
                 or startDay == ""
                 or endDay == ""
                 or roomtype == ""
             ):
                 return redirect(url_for("failed"))
             else:
-                if DBedit(uname, startDay, endDay, uphone, roomtype):
+                if DBedit(id, uname, startDay, endDay, uphone, roomtype):
                     return redirect(url_for("Success"))
                 else:
                     return redirect(url_for("failed"))
-        return render_template("AdminModify.html", DBfatch=DBsearch(uphone))
-    return render_template("msg.html", msg="請從主頁登入") 
+        return render_template("AdminModify.html", DBfatch=DBsearch("id", id))
+    return render_template("msg.html", msg="請從主頁登入")
 
 
 @app.route("/modify", methods=["GET", "POST"])  # 客戶端修改資料 網頁導向要更改
 def modify():
-    uphone = request.args.get("id")
+    id = request.args.get("id")
     if request.method == "POST":
+        id = request.form["id"]
         uname = request.form["uname"]
+        uphone = request.form["uphone"]
         startDay = request.form["bookdate"]
         endDay = request.form["bookEndDate"]
         roomtype = request.form["roomtype"]
-        if (
-            uname == ""
-            or uphone == ""
-            or startDay == ""
-            or endDay == ""
-            or roomtype == ""
-        ):
+        if uname == "" or startDay == "" or endDay == "" or roomtype == "":
             return redirect(url_for("failed"))
         else:
-            if DBedit(uname, startDay, endDay, uphone, roomtype):
+            if DBedit(id, uname, startDay, endDay, uphone, roomtype):
                 return redirect(url_for("Success"))
             else:
                 return redirect(url_for("failed"))
-    return render_template("modify.html", DBfatch=DBsearch(uphone))
+    return render_template("modify.html", DBfatch=DBsearch("id", id))

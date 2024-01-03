@@ -138,24 +138,27 @@ def DBedit(iid: str, mname: str, day_start: str, day_end: str,
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
         cursor.execute(
-            "UPDATE Booking SET DayStart=?, DayEnd=?, mname=?, Roomtype=?, Phone=?\
-            WHERE iid=?;",
+            "UPDATE Booking SET DayStart=?, DayEnd=?, Name=?, Roomtype=?,\
+                Phone=? WHERE iid=?;",
             (day_start, day_end, mname, rt, uphone, iid),
         )
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
         conn.close()
-        return DBsearch(uphone)
+        return DBsearch("id", iid)
     except sqlite3.Error as error:
         print(f"執行 SELECT 操作時發生錯誤：{error}")
 
 
-def DBsearch(uphone: str) -> list:
+def DBsearch(mode: str, data: str) -> list:
     """查詢資料庫指定資料，以電話搜尋"""
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
-        cursor.execute("SELECT * FROM Booking WHERE Phone=?", (uphone,))
+        if mode == "id":
+            cursor.execute("SELECT * FROM Booking WHERE iid=?", (data,))
+        elif mode == "phone":
+            cursor.execute("SELECT * FROM Booking WHERE Phone=?", (data,))
         DBdata = cursor.fetchall()  # 抓取所有資料
         if len(DBdata) > 0:  # 判斷有無資料
             return DBdata
@@ -190,7 +193,7 @@ def DeleteData(uphone: str, mname: str = None, day_start: str = None,
         if mname or day_end or day_start or rt:
             cursor.execute(
                 """delete from Booking
-                where DayStart=?, DayEnd=?, mname=?, Roomtype=?, Phone=?
+                where DayStart=?, DayEnd=?, Name=?, Roomtype=?, Phone=?
                 """, (day_start, day_end, mname, rt, uphone))
         else:
             cursor.execute("delete from Booking where Phone=?", (uphone,))
@@ -248,7 +251,7 @@ def send_booked_email(receiver_phone: str) -> bool:
     sender_email, sender_password = getManagerCredentials(email=True)
 
     # 查找客戶資訊
-    receiver_inf = DBsearch(receiver_phone)
+    receiver_inf = DBsearch("phone", receiver_phone)
     receiver_name = receiver_inf[0][1]
     receiver_phone = receiver_inf[0][4]
     receiver_email = (
@@ -316,7 +319,7 @@ def send_booked_line(receiver_phone: str) -> bool:
     url, token = getManagerCredentials(line=True)
 
     # 查找客戶資訊
-    receiver_inf = DBsearch(receiver_phone)
+    receiver_inf = DBsearch("phone", receiver_phone)
     receiver_name = receiver_inf[0][1]
     receiver_phone = receiver_inf[0][4]
     receiver_email = receiver_inf[0][6] if receiver_inf[0][6] else "X"
