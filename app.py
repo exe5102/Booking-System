@@ -30,6 +30,7 @@ def index():
     當網頁Post進資料
     將資料包裝起來，進入BDnew()進行訂房，建立訂房資料
     """
+    dfrt = request.args.get("rt")
     if request.method == "POST":
         uname = request.form["uname"]
         uphone = request.form["uphone"]
@@ -64,7 +65,7 @@ def index():
             else:
                 print("<- DEBUG -> 電話或Email格式不符", uphone, email)
                 return redirect(url_for("failed"))
-    return render_template("index.html", min=DateControl()[0])
+    return render_template("index.html", min=DateControl()[0], rt=dfrt)
 
 
 @app.route("/adminlogin", methods=["GET", "POST"])  # 管理端登入
@@ -113,7 +114,10 @@ def search():
 
 @app.route("/room")  # 客戶查詢資料  功能待新增
 def room():
-    return render_template("room.html")
+    return render_template("room.html",
+                           room1=Room["單人房"],
+                           room2=Room["雙人房"],
+                           room4=Room["四人房"])
 
 
 @app.route("/adminhomepage")  # 管理端主頁
