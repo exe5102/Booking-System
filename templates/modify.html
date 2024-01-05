@@ -28,20 +28,20 @@
 								<tbody>
 									{% if DBfatch %}
 										{% for record in DBfatch %}
-											<tr>
-												<td><p>{{record[1]}}</p></td>
-												<td><input type="date" name="bookdate" id="bookdate" value="{{ record[2] }}" min="{{min}}"></td>
-												<td><input type="date" name="bookEndDate" id="bookEndDate" value="{{ record[3] }}" min="{{min}}"></td>
-												<td><p>{{record[4]}}</p></td>
-												<td><select name="roomtype" id="roomtype">
-														<option value="單人房" {% if record[5] == '單人房' %}selected{% endif %}>單人房</option>
-														<option value="雙人房" {% if record[5] == '雙人房' %}selected{% endif %}>雙人房</option>
-														<option value="四人房" {% if record[5] == '四人房' %}selected{% endif %}>四人房</option>
-													</select>
-												</td>
-												<input type="hidden" name="id" value="{{ record[0] }}">
-												<td><input type="submit" value="送出"></td>
-											</tr>
+										<tr>
+											<td><input type="text" name="uname" id="uname" value="{{ record[1] }}" placeholder="" /></td>
+											<td><input type="date" name="bookdate" id="bookdate" value="{{ record[2] }}" min="{{min}}"></td>
+											<td><input type="date" name="bookEndDate" id="bookEndDate" value="{{ record[3] }}" min="{{min}}"></td>
+											<td><input type="text" name="uphone" id="uphone" value="{{ record[4] }}" placeholder="" /></td>
+											<td><select name="roomtype" id="roomtype">
+													<option value="單人房" {% if record[5] == '單人房' %}selected{% endif %}>單人房</option>
+													<option value="雙人房" {% if record[5] == '雙人房' %}selected{% endif %}>雙人房</option>
+													<option value="四人房" {% if record[5] == '四人房' %}selected{% endif %}>四人房</option>
+												</select>
+											</td>
+											<input type="hidden" name="id" value="{{ record[0] }}">
+											<td><input type="submit" value="送出"></td>
+										</tr>
 										{% endfor %}
 									{% else %}
 										<tr>
