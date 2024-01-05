@@ -54,6 +54,45 @@
 									</div>
 								</form>
 							</section>
+
+							<form action="/admindelete2" method="post">
+								<table>
+								<thead>
+									<tr>
+										<th><h4>姓名</h4></th>
+										<th><h4>開始日期</h4></th>
+										<th><h4>結束日期</h4></th>
+										<th><h4>電話</h4></th>
+										<th><h4>房型</h4></th>
+										<th><h4>勾選</h4></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									{% if DBfatch %}
+									{% for record in DBfatch %}
+									<tr>
+										<td><p>{{record[1]}}</p></td>
+										<td><p>{{record[2]}}</p></td>
+										<td><p>{{record[3]}}</p></td>
+										<td><p>{{record[4]}}</p></td>
+										<td><p>{{record[5]}}</p></td>
+										<input type="hidden" name="id" value="{{ record[0] }}">
+										<td><input type="submit" value="Delete" class="fit" /></td>
+									</tr>
+										{% endfor %}
+									{% else %}
+										<tr>
+											<td colspan="6">沒有查詢到資料</td>
+										</tr>
+									{% endif %}
+								</tbody>
+								</table>
+							</form>
+
+							<ul class="actions special">
+								<li><a href="{{ url_for('Administration') }}" class="button primary">回管理端首頁</a></li>
+							</ul>
 						</div>
 					</div>
 

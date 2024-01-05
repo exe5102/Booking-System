@@ -187,7 +187,7 @@ def DeleteData(id: int) -> bool:
     try:
         conn = sqlite3.connect(DB_PATH)  # 連接資料庫
         cursor = conn.cursor()  # 建立cursor物件
-        cursor.execute("delete from Bookingwhere iid=?", (id,))
+        cursor.execute("delete from Booking where iid=?", (id,))
         print(f"=>異動 {cursor.rowcount} 筆記錄")
         conn.commit()
         conn.close()

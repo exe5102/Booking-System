@@ -143,13 +143,22 @@ def Admindelete():
         if request.method == "POST":
             uphone = request.form["Sphone"]
             data = DBsearch("phone", uphone)
-            if data is not None:
-                DeleteData(uphone)
-                return render_template("ResultDelete.html", DBfatch=data)
-            else:
-                return render_template("ResultDeleteFail.html")
+            print(data)
+            return render_template("AdminDelete.html", DBfatch=data)
         return render_template("AdminDelete.html")
     return render_template("msg.html", msg="請從主頁登入")
+
+
+@app.route("/admindelete2", methods=["GET", "POST"])  # 管理端取消訂單
+def Admindelete2():
+    if request.method == "POST":
+        id = request.form["id"]
+        onedata = DBsearch("id", id)
+        print(id)
+        DeleteData(id)
+        return render_template("ResultDelete.html", DBfatch=onedata)
+    else:
+        return redirect(url_for("failed"))
 
 
 @app.route("/adminsearch", methods=["GET", "POST"])  # 管理端查詢指定客戶訂單
