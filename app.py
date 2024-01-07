@@ -99,6 +99,22 @@ def Success():
     return render_template("ResultSuccess.html")
 
 
+@app.route("/adminfailed")  # 客戶訂房失敗
+def adminfailed():
+    """
+    建立訂房資料失敗，導向訂房失敗頁面
+    """
+    return render_template("ResultFail_admin.html")
+
+
+@app.route("/adminsuccess")  # 客戶訂房成功
+def adminSuccess():
+    """
+    建立訂房資料成功，導向訂房成功頁面
+    """
+    return render_template("ResultSuccess_admin.html")
+
+
 @app.route("/search", methods=["GET", "POST"])  # 客戶查詢資料
 def search():
     """
@@ -208,10 +224,10 @@ def AdminEdit():
                 or endDay == ""
                 or roomtype == ""
             ):
-                return redirect(url_for("failed"))
+                return redirect(url_for("adminfailed"))
             else:
                 if DBedit(id, uname, startDay, endDay, uphone, roomtype):
-                    return redirect(url_for("Success"))
+                    return redirect(url_for("adminSuccess"))
                 else:
                     return redirect(url_for("failed"))
         return render_template("AdminModify.html", DBfatch=DBsearch("id", id))
