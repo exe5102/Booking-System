@@ -18,7 +18,6 @@ from lib import (
 
 DBcreate()
 roomstate()
-
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Final-Projuct"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -130,10 +129,10 @@ def search():
 
 @app.route("/room")  # 客戶查詢資料  功能待新增
 def room():
-    return render_template("room.html",
-                           room1=Room["單人房"],
-                           room2=Room["雙人房"],
-                           room4=Room["四人房"])
+    roomstate()
+    return render_template(
+        "room.html", room1=Room["單人房"], room2=Room["雙人房"], room4=Room["四人房"]
+    )
 
 
 @app.route("/adminhomepage")  # 管理端主頁
@@ -218,12 +217,7 @@ def AdminEdit():
             startDay = request.form["bookdate"]
             endDay = request.form["bookEndDate"]
             roomtype = request.form["roomtype"]
-            if (
-                uname == ""
-                or startDay == ""
-                or endDay == ""
-                or roomtype == ""
-            ):
+            if uname == "" or startDay == "" or endDay == "" or roomtype == "":
                 return redirect(url_for("adminfailed"))
             else:
                 if DBedit(id, uname, startDay, endDay, uphone, roomtype):
@@ -252,3 +246,8 @@ def modify():
             else:
                 return redirect(url_for("failed"))
     return render_template("modify.html", DBfatch=DBsearch("id", id))
+
+
+if __name__ == "__main__":  # 若直接執行本程式才啟動伺服器，若僅被呼叫則不啟動
+    app.run()
+    app.run(debug=True, port=5500)

@@ -205,6 +205,9 @@ def roomlimit(roomtype: str) -> bool:  # 用途?
 
 def roomstate():  # 用途?
     """空房資訊的讀取以及字典的初始化"""
+    Room["單人房"] = 20
+    Room["雙人房"] = 20
+    Room["四人房"] = 20
     for record in DBAll():
         Room[record[5]] -= 1
 
