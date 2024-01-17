@@ -166,14 +166,23 @@ def Admindelete():
 
 @app.route("/admindelete2", methods=["GET", "POST"])  # 管理端取消訂單
 def Admindelete2():
-    if request.method == "POST":
-        id = request.form["id"]
-        onedata = DBsearch("id", id)
-        print(id)
-        DeleteData(id)
-        return render_template("ResultDelete.html", DBfatch=onedata)
+    """
+    管理端刪除訂房資料，先進DBsearch()搜索資料，再進行刪除，若無資料則導向ResultDeleteFail_admin.html網頁
+    """
+    if "loginAdminId" in session:
+        if request.method == "POST":
+            delete_ids = request.form.getlist('delete_ids')  # 取得所有checkbox的值
+            data = []
+
+            if delete_ids:
+                for i in delete_ids:
+                    data = data + DBsearch("id", i)
+                    DeleteData(i)
+                return render_template("ResultDelete_admin.html", DBfatch=data)
+            else:
+                return render_template("ResultDeleteFail_admin.html")
     else:
-        return redirect(url_for("failed"))
+        return render_template("msg.html", msg="請從主頁登入")
 
 
 @app.route("/adminsearch", methods=["GET", "POST"])  # 管理端查詢指定客戶訂單

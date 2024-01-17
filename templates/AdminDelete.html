@@ -78,7 +78,10 @@
 										<td><p>{{record[4]}}</p></td>
 										<td><p>{{record[5]}}</p></td>
 										<input type="hidden" name="id" value="{{ record[0] }}">
-										<td><input type="submit" value="Delete" class="fit" /></td>
+										<td>
+											<input type="checkbox" name="delete_ids" value="{{ record[0] }}" id="select{{ loop.index }}">
+											<label for="select{{ loop.index }}" class="display: none"></label>
+										</td>
 									</tr>
 										{% endfor %}
 									{% else %}
@@ -88,6 +91,7 @@
 									{% endif %}
 								</tbody>
 								</table>
+							<input type="submit" value="刪除選中的訂單" class="fit">
 							</form>
 
 							<ul class="actions special">
