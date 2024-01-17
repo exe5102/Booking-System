@@ -1,23 +1,25 @@
-# Booking-System
+# Booking-System Web
 
- My Scripting Language course final project
+Our Scripting Language course final project.
 
-### The package versions in use are as follows
 
-blinker==1.7.0
+## Main techniques
 
-click==8.1.7
+This Web is under Flask frame, and use SQLite to save our booking data.
 
-colorama==0.4.6
+## Describe
 
-Flask==3.0.0
+User on the Home page can book rooms, search booked records, and modify them.
 
-itsdangerous==2.1.2
+On the Room Preview page, the user can check how many rooms are left over right now, click "立即訂房" to go directly to the booking table and the room type will be filled in auto.
 
-Jinja2==3.1.2
+If the user booking is successful, the system will send a Line message to notify the administrator (LINE settings need to be set in advance). If the user has entered the correct email, it will send a Booking Success Mail to the user.
 
-MarkupSafe==2.1.3
+Administrator needs a password to log in to the Admin page, and on the Admin Home page, the administrator can check all bookings, search and modify, also delete.
 
-Werkzeug==3.0.1
 
-requests==2.31.0
+## Author
+
+[exe5102](https://github.com/exe5102)
+[mumao0526](https://github.com/Mumao0526)
+[a24985041a](https://github.com/a24985041a)
